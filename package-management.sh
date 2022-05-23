@@ -1,5 +1,14 @@
 #! /usr/bin/env bash
 
+# Original script written by WaXxX333
+# WaXxX333's profile: https://stackoverflow.com/users/12556213/waxxx333
+# Found script here: https://stackoverflow.com/questions/1298066/how-can-i-check-if-a-package-is-installed-and-install-it-if-not
+# Personal Tweaks: declaring and populating the package array
+
+
+set -euo pipefail
+IFS=$'\n\t'
+
 FOUND=("\033[38;5;10m")
 
 NOTFOUND=("\033[38;5;9m")
