@@ -1,7 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -euo pipefail
 
+catch() {
+  echo -e "catching!\n"
+  if [[ "$1" != "0" ]]; then
+    echo -e "Removing ${ISO_NAME}...\n"
+    rm -f ${ISO_NAME}
+    echo -e "Error $1 occurred on line $2\n\n"
+    exit
+  fi
+}
 
 argument=$(ls -1)
 echo $argument
@@ -445,6 +454,7 @@ do
 		                      # 4) Test image variable non-existence && download using wget inside while loop
 
 					if [[ ! -e "${DESTINATION}/${ISO_NAME}" ]]; then
+					        trap 'catch $? $LINENO' INT TERM EXIT
 						echo -e "\n\n${ISO_NAME} not found. Starting download via wget..."
 						axel -o "${DESTINATION}"/"${ISO_NAME}" "${ISO_URL}"
 						echo -e "\n\nExit status (0 means success; 1 means error): $?"
