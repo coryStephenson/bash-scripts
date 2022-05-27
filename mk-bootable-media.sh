@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
+set -o errtrace 
 
 catch() {
-  echo -e "catching!\n"
-  if [[ "$1" != "0" ]]; then
-    echo -e "Removing ${ISO_NAME}...\n"
-    rm -f ${ISO_NAME}
-    echo -e "Error $1 occurred on line $2\n\n"
-    exit
-  fi
+  exit_code="${1}"
+  line_number="${2}"
+  iso_name="${ISO_NAME}"
+  echo -e "ERROR: Exit code ${exit_code} at about line number ${line_number}.\n"
+  echo -e "Removing ${iso_name}...\n"
+  cd /home/cory/iso-files && rm -f ${ISO_NAME}*
+  echo $?
+  exit
 }
 
 argument=$(ls -1)
@@ -454,7 +456,10 @@ do
 		                      # 4) Test image variable non-existence && download using wget inside while loop
 
 					if [[ ! -e "${DESTINATION}/${ISO_NAME}" ]]; then
-					        trap 'catch $? $LINENO' INT TERM EXIT
+						exit_code="$?"
+						line_number="$LINENO"
+						iso_name="$ISO_NAME"
+						trap "catch '${exit_code}' '${LINENO}'" ERR INT TERM EXIT
 						echo -e "\n\n${ISO_NAME} not found. Starting download via wget..."
 						axel -o "${DESTINATION}"/"${ISO_NAME}" "${ISO_URL}"
 						echo -e "\n\nExit status (0 means success; 1 means error): $?"
