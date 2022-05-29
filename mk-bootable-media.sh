@@ -10,8 +10,7 @@ catch() {
   echo -e "ERROR: Exit code ${exit_code} at about line number ${line_number}.\n"
   echo -e "Removing ${iso_name}...\n"
   cd /home/cory/iso-files && rm -f ${ISO_NAME}*
-  echo $?
-  exit
+  echo -e "Exit code for .iso removal: $?"
 }
 
 argument=$(ls -1)
