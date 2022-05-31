@@ -114,7 +114,7 @@ mainmenu() {
 PS3=$'\n\n'"What would you like to do? "
 COLUMNS=1
 main=("Scan something" "Print something" "Quit")
-
+printing=("Print a file to the default printer" "List available printers" "Set the default printer" "More options")
 while true
 do
         echo -e "\nMAIN MENU\n\n"
@@ -127,7 +127,7 @@ do
 		    "Scan something")
 
 
-
+                                echo -e "\nSCAN MENU\n\n"
                                 select ans in "Black and White" "Color" "Return to main menu" "Quit";
 			        do	   
                                     case $ans in
@@ -152,9 +152,11 @@ do
 
 		   "Print something")
 
-
-
-			         echo -e "something something"
+                                echo -e "\nPRINT MENU\n\n"
+				select b in "${printing[@]};
+				do
+				    case $b in
+				          "Print a file to the default printer")
 				 ;;
 
 		   "Quit")
