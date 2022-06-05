@@ -9,19 +9,10 @@ help()
     exit 2
 }
 
-OPTS=`getopt -o ef:o:lpPjJmMg:O:G:bs::F:AEX:Y:x:y:t::d::n::L:C:R:N:D:U:B:\#:SkKwIcHqz:huva:r::T::W:: -- "$@"`
 
-VALID_ARGUMENTS=$# # Returns the count of arguments that are in short or long options
-
-if [ "$VALID_ARGUMENTS" -eq 0 ]; then
-  help
-fi
-
-eval set -- "$OPTS"
-
-while :
+while getopts ef:o:lpPjJmMg:O:G:bs::F:AEX:Y:x:y:t::d::n::L:C:R:N:D:U:B:\#:SkKwIcHqz:huva:r::T::W:: flag
 do
-  case "$1" in
+  case "${flag}" in
     -c | --city1 )
       city1="$2"
       shift 2
