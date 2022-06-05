@@ -9,9 +9,7 @@ help()
     exit 2
 }
 
-SHORT=e,f:,o:,l,p,P,j,J,m,M,g:,O:,G:,b,s:,F:,A,E,X:,Y:,x:,y:,t:,d:,n:,L:,C:,R:,N:
-LONG=city1:,city2:,help
-OPTS=$(getopt -a -n weather --options $SHORT -- "$@")
+OPTS=`getopt -o ef:o:lpPjJmMg:O:G:bs::F:AEX:Y:x:y:t::d::n::L:C:R:N:D:U:B:#:SkKwIcHqz:huva:r::T::W:: -- "$@"`
 
 VALID_ARGUMENTS=$# # Returns the count of arguments that are in short or long options
 
