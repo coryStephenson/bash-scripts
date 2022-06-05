@@ -9,7 +9,7 @@ help()
     exit 2
 }
 
-OPTS=`getopt -o ef:o:lpPjJmMg:O:G:bs::F:AEX:Y:x:y:t::d::n::L:C:R:N:D:U:B:#:SkKwIcHqz:huva:r::T::W:: -- "$@"`
+OPTS=`getopt -o ef:o:lpPjJmMg:O:G:bs::F:AEX:Y:x:y:t::d::n::L:C:R:N:D:U:B:\#:SkKwIcHqz:huva:r::T::W:: -- "$@"`
 
 VALID_ARGUMENTS=$# # Returns the count of arguments that are in short or long options
 
