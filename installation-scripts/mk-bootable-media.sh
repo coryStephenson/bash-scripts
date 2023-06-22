@@ -7,14 +7,13 @@ catch() {
   exit_code="${1}"
   line_number="${2}"
   iso_name="${ISO_NAME}"
-  echo -e "ERROR: Exit code ${exit_code} at about line number ${line_number}.\n"
+  echo -e "SIGINT: Exit code ${exit_code} at about line number ${line_number}.\n"
   echo -e "Removing ${iso_name}...\n"
-  cd /home/cory/iso-files && rm -f ${ISO_NAME}*
+  rm -rf "${ISO_NAME}"*
   echo -e "Exit code for .iso removal: $?"
 }
 
-argument=$(ls -1)
-echo $argument
+
 
 <<errors
 By default, bash will continue after errors.
@@ -81,7 +80,7 @@ generatechecksum() {
 
                                 echo -e "$(command -v md5sum)\n\n" 
 				
-				if [[ $? != 0 ]]; 
+				if ! echo -e "$(command -v md5sum)\n\n";
 				
 				then
 				
@@ -102,7 +101,7 @@ generatechecksum() {
 
 							   PATH=$(command -v md5sum):$PATH
 
-							   if [[ $? != 0 ]];
+							   if ! PATH=$(command -v md5sum):$PATH;
 							   
 							   then
 
@@ -114,7 +113,7 @@ generatechecksum() {
 
 							   echo -e "Successfully added to PATH variable.\n\n"
 
-							   echo "$PATH\n\n"
+							   echo -e "$PATH\n\n"
 
                                                            mainmenu
 							   ;;
@@ -125,7 +124,7 @@ generatechecksum() {
 
 							   PATH=$PATH:$(command -v md5sum)
 
-							   if [[ $? != 0 ]];
+							   if ! PATH=$PATH:$(command -v md5sum);
 
 							   then
 
@@ -158,7 +157,7 @@ generatechecksum() {
 			        
 				fi
 				
-				LOCAL_MD5=$(md5sum ${ISO_NAME})
+				LOCAL_MD5=$(md5sum "${ISO_NAME}")
 				
 				echo -e "\n\nThe following checksum was generated
 				
@@ -178,7 +177,7 @@ generatechecksum() {
 
 				echo -e "$(command -v sha256sum)\n\n" 
 
-				if [[ $? != 0 ]]; 
+				if ! echo -e "$(command -v sha256sum)\n\n";
 				
 				then
 				
@@ -200,7 +199,7 @@ generatechecksum() {
 
 							   PATH=$(command -v sha256sum):$PATH
 
-							   if [[ $? != 0 ]];
+							   if ! PATH=$(command -v sha256sum):$PATH;
 							   
 							   then
 
@@ -223,7 +222,7 @@ generatechecksum() {
 
 							   PATH=$PATH:$(command -v sha256sum)
 
-							   if [[ $? != 0 ]];
+							   if ! PATH=$PATH:$(command -v sha256sum);
 
 							   then
 
@@ -256,8 +255,11 @@ generatechecksum() {
 
 			        fi
                                 
-                 # Python program to find SHA256 hash string of a file
-                 python3 /home/cory/iso-files/sha256hash.py
+                 read -p "Enter the input file name: " filename
+
+                 sha256_hash=$(sha256sum "$filename" | awk '{ print $1 }')
+
+                 echo "$sha256_hash"
                  
 		 echo -e "\n\n"
 		 mainmenu
@@ -276,11 +278,11 @@ generatechecksum() {
 
 				echo -e "$(command -v sha512sum)\n\n"
 				
-				if [[ $? != 0 ]]; 
+				if ! echo -e "$(command -v sha512sum)\n\n";
 				
 				then
 					
-				echo "\nThe command sha512sum could not be found in the PATH variable.\n\n"
+				echo -e "\nThe command sha512sum could not be found in the PATH variable.\n\n"
                                 
 				echo -e "$PATH\n\n"
 
@@ -298,7 +300,7 @@ generatechecksum() {
 
 							   PATH=$(command -v sha512sum):$PATH
 
-							   if [[ $? != 0 ]];
+							   if ! PATH=$(command -v sha512sum):$PATH;
 							   
 							   then
 
@@ -321,7 +323,7 @@ generatechecksum() {
 
 							   PATH=$PATH:$(command -v sha512sum)
 
-							   if [[ $? != 0 ]];
+							   if ! PATH=$PATH:$(command -v sha512sum);
 
 							   then
 
@@ -381,13 +383,13 @@ pastechecksum() {
 		    do
 			case $b in
 				"MD5")
-    			         read -p "MD5 checksum: " ISO_MD5
+    			         read -p "MD5 checksum: " MD5
 				 ;;
-		                "SHA256")
-		                 read -p "SHA256 checksum: " ISO_SHA256
-	                         ;;
-                                "SHA512")
-                                 read -p "SHA512 checksum: " ISO_SHA512
+				"SHA256")
+		                 read -p "SHA256 checksum: " SHA256
+				 ;;
+				"SHA512")
+                                 read -p "SHA512 checksum: " SHA512
 				 ;;
                                 "Return to main menu")
                                  
@@ -449,25 +451,31 @@ do
 		
 					    echo -e "\n\nDesired filename for .iso download? "
 		
-					         read ISO_NAME
+					         read -r ISO_NAME
 
 
 		                      # 4) Test image variable non-existence && download using wget inside while loop
 
-					if [[ ! -e "${DESTINATION}/${ISO_NAME}" ]]; then
-						exit_code="$?"
-						line_number="$LINENO"
-						iso_name="$ISO_NAME"
-						trap "catch '${exit_code}' '${LINENO}'" ERR INT TERM EXIT
-						echo -e "\n\n${ISO_NAME} not found. Starting download via wget..."
+		            cd "${DESTINATION}"
+		            find "${DESTINATION}" -name "${ISO_NAME}".iso
+		            exit_code=$?
+
+		            if [ $exit_code -ne 0 ] && [ $exit_code -ne 14 ]; then
+                        echo "\n\n${ISO_NAME} not found. Catching..."
+
+					else
+						echo -e "\n\n${ISO_NAME} already exists. The file resides in the following directory: ${DESTINATION}"
+						echo -e "\nIt may just be a partial download. To be on the safe side, I'll delete it.\n"
+                        echo -e "\nRemoving files that start with ${ISO_NAME}...\n"
+                        rm -rf "${ISO_NAME}"*
+						trap 'catch '${exit_code}' '${LINENO}'' ERR INT TERM EXIT
+						echo -e "\n\nStarting download via axel..."
 						axel -o "${DESTINATION}"/"${ISO_NAME}" "${ISO_URL}"
 						echo -e "\n\nExit status (0 means success; 1 means error): $?"
-					else
-						echo -e "\n\n${ISO_NAME} already exists. The file resides 
-							 in the following directory: ${DESTINATION}."
-					fi
+                    fi
 
-					   
+                    mainmenu
+
 					;;
 
 
