@@ -157,12 +157,17 @@ generatechecksum() {
 			        
 				fi
 				
-				LOCAL_MD5=$(md5sum "${ISO_NAME}")
+				read -p "Enter the input file name: " filename
+		                read -p "Paste the corresponding MD5 checksum: " MD5	
+                 
+                                if [[ $(md5sum -c <<< "${MD5}  ${filename}") ]]; then
+                                      echo "Checksums match. File is unchanged."
+                                else
+                                      echo "Checksums do not match. File may be altered or corrupted."
+                                fi
 				
-				echo -e "\n\nThe following checksum was generated
-				
-				\nwith md5sum for comparison purposes:\n\n $LOCAL_MD5\n\n"
-				
+                                echo -e "\n\n"
+                                mainmenu
 				;;
 
 		               "sha256sum")
@@ -258,7 +263,7 @@ generatechecksum() {
 		read -p "Enter the input file name: " filename
 		read -p "Paste the corresponding SHA256 checksum: " SHA256		
                  
-                if [[ $(sha256sum -c <<< "$SHA256  $filename") ]]; then
+                if [[ $(sha256sum -c <<< "${SHA256}  ${filename}") ]]; then
                       echo "Checksums match. File is unchanged."
                 else
                       echo "Checksums do not match. File may be altered or corrupted."
