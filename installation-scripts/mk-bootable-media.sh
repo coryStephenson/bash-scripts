@@ -254,13 +254,16 @@ generatechecksum() {
 				echo -e "\n\n"
 
 			        fi
-                                
-                 read -p "Enter the input file name: " filename
 
-                 sha256_hash=$(sha256sum "$filename" | awk '{ print $1 }')
-
-                 echo "$sha256_hash"
+		read -p "Enter the input file name: " filename
+		read -p "Paste the corresponding SHA256 checksum: " SHA256		
                  
+                if [[ $(sha256sum -c <<< "$SHA256  $filename") ]]; then
+                      echo "Checksums match. File is unchanged."
+                else
+                      echo "Checksums do not match. File may be altered or corrupted."
+                fi
+		
 		 echo -e "\n\n"
 		 mainmenu
 	                        ;;
