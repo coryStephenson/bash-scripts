@@ -421,10 +421,12 @@ thumb_drive_path=$(lsblk -o NAME,TYPE | awk '$2=="disk"{print "/dev/"$1}')
 # Display the detected thumb drive path
 echo "Thumb Drive Path: ${thumb_drive_path}"
 
-# Replace "/path/to/your/image.iso" with the path to your ISO file
+# Replace "/path/to/your/image.iso" with the path to your most recently downloaded ISO file
+iso_file_path=/home/cory/iso-files/$(ls -t1 | head -n 1)
+
 # Make sure to double-check the thumb_drive_path variable to ensure it points to the correct thumb drive.
 # Use the bs=4K option for an optimal block size (as mentioned in the previous response).
-dd if=/path/to/your/image.iso of="${thumb_drive_path}" bs=4K status=progress
+dd if="${iso_file_path}" of="${thumb_drive_path}" bs=4096 conv=fdatasync status=progress --dry-run
 
 }
 mainmenu() {
