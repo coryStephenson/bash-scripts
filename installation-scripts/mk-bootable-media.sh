@@ -412,12 +412,26 @@ pastechecksum() {
                      
 }
 
+datadump() {
 
+# Use lsblk to list block devices and filter by the "disk" type
+# We assume that the thumb drive will be detected as a "disk" type.
+thumb_drive_path=$(lsblk -o NAME,TYPE | awk '$2=="disk"{print "/dev/"$1}')
+
+# Display the detected thumb drive path
+echo "Thumb Drive Path: ${thumb_drive_path}"
+
+# Replace "/path/to/your/image.iso" with the path to your ISO file
+# Make sure to double-check the thumb_drive_path variable to ensure it points to the correct thumb drive.
+# Use the bs=4K option for an optimal block size (as mentioned in the previous response).
+dd if=/path/to/your/image.iso of="${thumb_drive_path}" bs=4K status=progress
+
+}
 mainmenu() {
 
 PS3=$'\n\n'"What would you like to do? "
 COLUMNS=1
-main=("Download .iso image(s)" "Paste corresponding .iso checksum(s) upon prompt" "Generate local checksum(s) for verification" "Quit")
+main=("Download .iso image(s)" "Paste corresponding .iso checksum(s) upon prompt" "Generate local checksum(s) for verification" "Carry out data dump" "Quit")
 crypt_algorithms=("MD5" "SHA256" "SHA512" "Return to main menu" "Quit")
 commands=("md5sum" "sha256sum" "sha512sum" "Return to main menu")
 
@@ -499,7 +513,11 @@ do
 			        generatechecksum
 				;;
 	
+                      "Carry out data dump")
 
+	                        datadump
+			        ;;
+	   
                         "Quit") 
 				
 				echo -e "\n\nAre you sure you want to quit?\n"
