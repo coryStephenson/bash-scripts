@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -euo pipefail
-set -o errtrace 
+set -o errtrace
 
 catch() {
   exit_code="${1}"
@@ -56,36 +56,36 @@ generatechecksum() {
 
 
                # 6) Generate local checksum using another case statement
-                   
+
 	           echo -e "\nCHECKSUM GENERATOR"
-		   
+
 		   PS3=$'\n\n'"Using which algorithm? "
-		   
+
 		   select c in "${commands[@]}";
-		   
+
 		   do
-		       
+
 			 case $c in
-			       
+
 				"md5sum")
-                                
-                                : ' 
+
+                                : '
                                 If md5sum is not found in the PATH variable, it may
                                 already reside on the system. Try adding its filepath
-                                to the PATH variable to see whether or not that solves 
+                                to the PATH variable to see whether or not that solves
                                 the problem.
                                 '
 
 				echo -e "md5sum is located:\n\n"
 
-                                echo -e "$(command -v md5sum)\n\n" 
-				
+                                echo -e "$(command -v md5sum)\n\n"
+
 				if ! echo -e "$(command -v md5sum)\n\n";
-				
+
 				then
-				
+
 				echo -e "\nThe command md5sum could not be found in the PATH variable.\n\n"
-			        
+
 				echo -e "$PATH\n\n"
 
 			        echo -e "Would you prefer to\n"
@@ -102,11 +102,11 @@ generatechecksum() {
 							   PATH=$(command -v md5sum):$PATH
 
 							   if ! PATH=$(command -v md5sum):$PATH;
-							   
+
 							   then
 
 							   echo -e "Error adding to PATH variable.\n\n"
-                                                           
+
 							   exit 1
 
 							   fi
@@ -119,7 +119,7 @@ generatechecksum() {
 							   ;;
 
 						"Append to PATH variable")
-							   
+
 							   echo -e "\n\nAppending to PATH variable...\n\n"
 
 							   PATH=$PATH:$(command -v md5sum)
@@ -140,54 +140,54 @@ generatechecksum() {
 
                                                            mainmenu
 							   ;;
-                                        
+
 				        esac
 
                                 done
 
 				echo -e "Updating sources list...\n\n"
-				
+
 				apt update
 
 				echo -e "\n\nInstalling software package md5sum...\n\n"
-			        
+
 			        apt -y install coreutils
 
 				echo -e "\n\n"
-			        
+
 				fi
-				
+
 				read -p "Enter the input file name: " filename
-		                read -p "Paste the corresponding MD5 checksum: " MD5	
-                 
+		                read -p "Paste the corresponding MD5 checksum: " MD5
+
                                 if [[ $(md5sum -c <<< "${MD5}  ${filename}") ]]; then
                                       echo "Checksums match. File is unchanged."
                                 else
                                       echo "Checksums do not match. File may be altered or corrupted."
                                 fi
-				
+
                                 echo -e "\n\n"
                                 mainmenu
 				;;
 
 		               "sha256sum")
-				
-                                : ' 
+
+                                : '
                                 If sha256sum is not found in the PATH variable, it may
                                 already reside on the system. Try adding its filepath
-                                to the PATH variable to see whether or not that solves 
+                                to the PATH variable to see whether or not that solves
                                 the problem.
                                 '
                                 echo -e "sha256sum is located:\n\n"
 
-				echo -e "$(command -v sha256sum)\n\n" 
+				echo -e "$(command -v sha256sum)\n\n"
 
 				if ! echo -e "$(command -v sha256sum)\n\n";
-				
+
 				then
-				
+
 				echo -e "\nThe command sha256sum could not be found in the PATH variable.\n\n"
-			       
+
 				echo -e "$PATH\n\n"
 
 			       	echo -e "Would you prefer to\n"
@@ -195,7 +195,7 @@ generatechecksum() {
 				PS3=$'\n\n'"Please select one. "
 
 				select add in "Prepend to PATH variable" "Append to PATH variable";
-				
+
 				do
 					case $add in
 						"Prepend to PATH variable")
@@ -205,11 +205,11 @@ generatechecksum() {
 							   PATH=$(command -v sha256sum):$PATH
 
 							   if ! PATH=$(command -v sha256sum):$PATH;
-							   
+
 							   then
 
 							   echo -e "Error adding to PATH variable.\n\n"
-                                                           
+
 							   exit 1
 
 							   fi
@@ -222,7 +222,7 @@ generatechecksum() {
 							   ;;
 
 						"Append to PATH variable")
-							   
+
 							   echo -e "\n\nAppending to PATH variable...\n\n"
 
 							   PATH=$PATH:$(command -v sha256sum)
@@ -243,7 +243,7 @@ generatechecksum() {
 
                                                            mainmenu
 							   ;;
-                                        
+
 				        esac
 
                                 done
@@ -261,45 +261,45 @@ generatechecksum() {
 			        fi
 
 		read -p "Enter the input file name: " filename
-		read -p "Paste the corresponding SHA256 checksum: " SHA256		
-                 
+		read -p "Paste the corresponding SHA256 checksum: " SHA256
+
                 if [[ $(sha256sum -c <<< "${SHA256}  ${filename}") ]]; then
                       echo "Checksums match. File is unchanged."
                 else
                       echo "Checksums do not match. File may be altered or corrupted."
                 fi
-		
+
 		 echo -e "\n\n"
 		 mainmenu
 	                        ;;
 
                                "sha512sum")
-			       
-                                : ' 
+
+                                : '
                                 If sha256sum is not found in the PATH variable, it may
                                 already reside on the system. Try adding its filepath
-                                to the PATH variable to see whether or not that solves 
+                                to the PATH variable to see whether or not that solves
                                 the problem.
                                 '
 
 				echo -e "sha512sum is located:\n\n"
 
 				echo -e "$(command -v sha512sum)\n\n"
-				
+
 				if ! echo -e "$(command -v sha512sum)\n\n";
-				
+
 				then
-					
+
 				echo -e "\nThe command sha512sum could not be found in the PATH variable.\n\n"
-                                
+
 				echo -e "$PATH\n\n"
 
                                 echo -e "Would you prefer to\n"
 
 				PS3=$'\n\n'"Please select one. "
-				
+
 				select add in "Prepend to PATH variable" "Append to PATH variable";
-				
+
 				do
 					case $add in
 						"Prepend to PATH variable")
@@ -309,13 +309,13 @@ generatechecksum() {
 							   PATH=$(command -v sha512sum):$PATH
 
 							   if ! PATH=$(command -v sha512sum):$PATH;
-							   
+
 							   then
 
 							   echo -e "Error adding to PATH variable.\n\n"
-                                                           
+
 							   exit 1
-							   
+
 							   fi
 
 							   echo -e "Successfully added to PATH variable.\n\n"
@@ -326,7 +326,7 @@ generatechecksum() {
 							   ;;
 
 						"Append to PATH variable")
-							   
+
 							   echo -e "\n\nAppending to PATH variable...\n\n"
 
 							   PATH=$PATH:$(command -v sha512sum)
@@ -336,7 +336,7 @@ generatechecksum() {
 							   then
 
 							   echo -e "Error adding to PATH variable.\n\n"
-                                                           
+
 							   exit 1
 
 							   fi
@@ -347,11 +347,11 @@ generatechecksum() {
 
                                                            mainmenu
 							   ;;
-                                        
+
 				        esac
 
                                 done
-                                
+
 
 				echo -e "Updating sources list..."
 
@@ -362,23 +362,23 @@ generatechecksum() {
 			        apt -y install coreutils
 
 				echo -e "\n\n"
-                                
+
 				fi
-			        
+
                                 ;;
-                                
+
                                "Return to main menu")
-                                 
+
 				       mainmenu
 				   ;;
-			      
+
 			      *) echo -e "Invalid entry. Please try an option on display."
-			          
+
 				      exit 1
 				      ;;
 		        esac
               done
-                                   
+
 }
 
 pastechecksum() {
@@ -400,33 +400,35 @@ pastechecksum() {
                                  read -p "SHA512 checksum: " SHA512
 				 ;;
                                 "Return to main menu")
-                                 
+
 					mainmenu
-			            ;;	 
+			            ;;
 			       *) echo -e "Invalid entry. Please try an option on display."
-			            
+
 				       exit 1
 				    ;;
 		        esac
                      done
-                     
+
 }
 
 datadump() {
 
 # Use lsblk to list block devices and filter by the "disk" type
 # We assume that the thumb drive will be detected as a "disk" type.
-thumb_drive_path=$(lsblk -o NAME,TYPE | awk '$2=="disk"{print "/dev/"$1}')
+thumb_drive_path=$(lsblk -o NAME,TYPE | awk '$2=="disk"{print "/dev/"$1}' | grep '/dev/sdb')
 
 # Display the detected thumb drive path
 echo "Thumb Drive Path: ${thumb_drive_path}"
 
 # Replace "/path/to/your/image.iso" with the path to your most recently downloaded ISO file
-iso_file_path=/home/cory/iso-files/$(ls -t1 | head -n 1)
+iso_file_path=/home/cory/iso-files/"$(ls -t1 ../iso-files | head -n 1)"
 
 # Make sure to double-check the thumb_drive_path variable to ensure it points to the correct thumb drive.
 # Use the bs=4K option for an optimal block size (as mentioned in the previous response).
-dd if="${iso_file_path}" of="${thumb_drive_path}" bs=4096 conv=fdatasync status=progress --dry-run
+dd if="${iso_file_path}" of="${thumb_drive_path}" bs=4096 conv=fdatasync status=progress
+
+mainmenu
 
 }
 mainmenu() {
@@ -442,12 +444,12 @@ do
         echo -e "\nMAIN MENU\n\n"
 	select a in "${main[@]}";
         do
-	    
+
 	    case $a in
-		    
-		    
+
+
 		    "Download .iso image(s)")
-                 
+
                                        # 1) Read user input for directory variable DESTINATION
 	                                    echo "Desired .iso download directory? (Please enter absolute path) "
 
@@ -455,26 +457,26 @@ do
 		                            read -r DESTINATION
 
 		                       # 2) Test directory variable non-existence && mkdir ~/iso-files
-		
+
 				            if [[ ! -d "${DESTINATION}" ]]; then
-			                    
+
 						    echo -e "\n\n${DESTINATION} not found. Making directory ${DESTINATION}..."
 			                            mkdir "${DESTINATION}"
-		
+
 					       else
-			          
+
 						echo -e "\n\n${DESTINATION} already exists. The file will be placed in ${DESTINATION}."
-		
+
 					       fi
 
 		                       # 3) Read user input for .iso image URL variable ISO
 
 		                            echo -e "\n\nDesired .iso download URL? "
-		                                 
+
 					         read -r ISO_URL
-		
+
 					    echo -e "\n\nDesired filename for .iso download? "
-		
+
 					         read -r ISO_NAME
 
 
@@ -504,28 +506,28 @@ do
 
 
 		"Paste corresponding .iso checksum(s) upon prompt")
-	             		 
+
                                 pastechecksum
 				;;
 
 
-                
+
 		       "Generate local checksum(s) for verification")
 
 			        generatechecksum
 				;;
-	
+
                       "Carry out data dump")
 
 	                        datadump
 			        ;;
-	   
-                        "Quit") 
-				
+
+                        "Quit")
+
 				echo -e "\n\nAre you sure you want to quit?\n"
 
                                 select ans in "Yes" "No";
-			        do	   
+			        do
                                     case $ans in
                                           "Yes")
                                                   exit 0
@@ -538,7 +540,7 @@ do
                        	        ;;
 
 			       *) echo -e "\nInvalid entry. Please try an option on display."
-			            
+
 				       mainmenu
 				    ;;
              esac
