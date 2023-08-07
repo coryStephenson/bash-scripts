@@ -52,7 +52,7 @@ steps
 # echo "number of seconds that the script has been running: ${SECONDS}" this prints a zero
 
 
-generatechecksum() {
+verifychecksum() {
 
 
                # 6) Generate local checksum using another case statement
@@ -381,36 +381,6 @@ generatechecksum() {
 
 }
 
-pastechecksum() {
-
-
-# 5) Read user input for checksum corresponding to (3) and use case statement depending on checksum algorithm (MD5, SHA1, SHA256, etc.)
-
-                    echo -e "\nPASTE CHECKSUM"
-		    select b in "${crypt_algorithms[@]}";
-		    do
-			case $b in
-				"MD5")
-    			         read -p "MD5 checksum: " MD5
-				 ;;
-				"SHA256")
-		                 read -p "SHA256 checksum: " SHA256
-				 ;;
-				"SHA512")
-                                 read -p "SHA512 checksum: " SHA512
-				 ;;
-                                "Return to main menu")
-
-					mainmenu
-			            ;;
-			       *) echo -e "Invalid entry. Please try an option on display."
-
-				       exit 1
-				    ;;
-		        esac
-                     done
-
-}
 
 datadump() {
 
@@ -424,6 +394,37 @@ echo "Thumb Drive Path: ${thumb_drive_path}"
 # Replace "/path/to/your/image.iso" with the path to your most recently downloaded ISO file
 iso_file_path=/home/cory/iso-files/"$(ls -t1 ../iso-files | head -n 1)"
 
+
+# Function to check if the drive already contains files or bootable images
+check_drive_content() {
+    # Replace /dev/sdX with your actual thumb drive path
+    drive="/dev/sdb"
+
+    if [[ -z $(ls -A "${drive}") ]]; then
+        echo "The drive is empty."
+    else
+        echo "The drive contains files or bootable images. Proceeding may result in data loss."
+        read -p "Do you want to continue? (y/n): " choice
+        if [[ $choice != "y" ]]; then
+            echo "Aborting..."
+            exit 1
+        fi
+    fi
+}
+
+# Function to handle interruptions and cleanup
+handle_interrupt() {
+    echo "Process interrupted. Cleaning up..."
+    # Add any cleanup commands here if needed
+    exit 1
+}
+
+# Trap the interrupt signal (Ctrl+C) to call the handle_interrupt function
+trap handle_interrupt INT
+
+# Call the check_drive_content function to verify the thumb drive's content
+check_drive_content
+
 # Make sure to double-check the thumb_drive_path variable to ensure it points to the correct thumb drive.
 # Use the bs=4K option for an optimal block size (as mentioned in the previous response).
 dd if="${iso_file_path}" of="${thumb_drive_path}" bs=4096 conv=fdatasync status=progress
@@ -435,7 +436,7 @@ mainmenu() {
 
 PS3=$'\n\n'"What would you like to do? "
 COLUMNS=1
-main=("Download .iso image(s)" "Paste corresponding .iso checksum(s) upon prompt" "Generate local checksum(s) for verification" "Carry out data dump" "Quit")
+main=("Download .iso image(s)" "Verify checksum(s)" "Carry out data dump" "Quit")
 crypt_algorithms=("MD5" "SHA256" "SHA512" "Return to main menu" "Quit")
 commands=("md5sum" "sha256sum" "sha512sum" "Return to main menu")
 
@@ -505,17 +506,10 @@ do
 					;;
 
 
-		"Paste corresponding .iso checksum(s) upon prompt")
+		            "Verify checksum(s)")
 
-                                pastechecksum
-				;;
-
-
-
-		       "Generate local checksum(s) for verification")
-
-			        generatechecksum
-				;;
+			               verifychecksum
+				      ;;
 
                       "Carry out data dump")
 
