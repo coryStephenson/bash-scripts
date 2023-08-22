@@ -391,16 +391,9 @@ thumb_drive_path=$(lsblk -o NAME,TYPE | awk '$2=="disk"{print "/dev/"$1}' | grep
 # Display the detected thumb drive path
 echo "Thumb Drive Path: ${thumb_drive_path}"
 
-# Replace "/path/to/your/image.iso" with the path to your most recently downloaded ISO file
-iso_file_path=/home/cory/iso-files/"$(ls -t1 ../iso-files | head -n 1)"
+# Check if the drive already contains files or bootable images
 
-
-# Function to check if the drive already contains files or bootable images
-check_drive_content() {
-    # Replace /dev/sdX with your actual thumb drive path
-    drive="/dev/sdb"
-
-    if [[ -z $(ls -A "${drive}") ]]; then
+    if [[ -z $(ls -A "${thumb_drive_path}") ]]; then
         echo "The drive is empty."
     else
         echo "The drive contains files or bootable images. Proceeding may result in data loss."
@@ -410,20 +403,13 @@ check_drive_content() {
             exit 1
         fi
     fi
-}
 
-# Function to handle interruptions and cleanup
-handle_interrupt() {
-    echo "Process interrupted. Cleaning up..."
-    # Add any cleanup commands here if needed
-    exit 1
-}
 
-# Trap the interrupt signal (Ctrl+C) to call the handle_interrupt function
-trap handle_interrupt INT
+# Replace "/path/to/your/image.iso" with the path to your most recently downloaded ISO file
+iso_file_path=/home/cory/iso-files/"$(ls -t1 ../iso-files | head -n 1)"
 
-# Call the check_drive_content function to verify the thumb drive's content
-check_drive_content
+
+echo "Creating bootable thumb drive with ${iso_file_path}..."
 
 # Make sure to double-check the thumb_drive_path variable to ensure it points to the correct thumb drive.
 # Use the bs=4K option for an optimal block size (as mentioned in the previous response).
@@ -432,6 +418,7 @@ dd if="${iso_file_path}" of="${thumb_drive_path}" bs=4096 conv=fdatasync status=
 mainmenu
 
 }
+
 mainmenu() {
 
 PS3=$'\n\n'"What would you like to do? "
