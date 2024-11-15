@@ -4,11 +4,32 @@
 set -euixof pipefail
 set -o errtrace
 
-# Verify root privileges for execution
-if [[ $EUID -ne 0 ]]; then
-echo "This script must be run as root"
-exit 1
-fi
+     # Verify root privileges for execution
+     if [[ $EUID -ne 0 ]]; then
+           echo "This script must be run as root"
+           exit 1
+     fi
+
+: << 'Installing snap on Debian'
+apt update
+apt install snap     # Installs the snap daemon
+snap install snapd   # Installs the latest snapd
+
+     if [[ $? -ne 0 ]]; then
+           echo "Error encountered: Some snaps require new snapd features. Installing the core snap and its latest version..."
+           snap install core
+           snap refresh core
+           exit 0
+     fi
+
+     if [[ $? -eq 0 ]]; then
+           echo "Testing your system..."
+           echo "Installing the hello-world snap..."
+           snap install hello-world
+           hello-world
+           exit 0
+     fi
+Installing snap on Debian
 
 # Check if desired applications already exist on local system
 # Source for 3>&1 1>&2 2>&3 stream redirect commands: https://unix.stackexchange.com/questions/42728/what-does-31-12-23-do-in-a-script
