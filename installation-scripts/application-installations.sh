@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 
 # Error handling
-set -euixof pipefail
-set -o errtrace
+# set -euixof pipefail
+# set -o errtrace
 
      # Verify root privileges for execution
      if [[ $EUID -ne 0 ]]; then
            echo "This script must be run as root"
            exit 1
      fi
+
+# List all locally installed binaries via apt
+# apt list --installed
 
 : << 'Installing snap on Debian'
 apt update
