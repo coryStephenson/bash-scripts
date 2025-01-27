@@ -39,3 +39,19 @@ mkfs.fat -F 32 "${DEVICE}1"
 
 # Done
 echo "Partitioning and formatting complete. The partition has been named 'MULTIBOOT'."
+
+# Install GRUB on USB stick to make it bootable
+mkdir -p /media/MULTIBOOT/boot
+
+# MBR booting
+grub-install --target=i386-pc --boot-directory=/media/MULTIBOOT/boot "$DEVICE"
+
+# Create a GRUB configuration file to boot the distros on your hard drive
+grub-mkconfig -o /media/MULTIBOOT/boot/grub/grub.cfg
+
+# Remove everythin after the line that says ### END/etc/grub.d/00_header ###
+sed '/### END/etc/grub.d/00_header ###/ q' /media/MULTIBOOT/boot/grub/grub.cfg
+
+cat /media/MULTIBOOT/boot/grub/grub.cfg
+
+
