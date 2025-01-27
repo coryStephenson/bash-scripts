@@ -53,5 +53,32 @@ grub-mkconfig -o /media/MULTIBOOT/boot/grub/grub.cfg
 sed '/### END/etc/grub.d/00_header ###/ q' /media/MULTIBOOT/boot/grub/grub.cfg
 
 cat /media/MULTIBOOT/boot/grub/grub.cfg
+sleep 10
+
+cat <<EOL >> /media/MULTIBOOT/boot/grub/grub.cfg
+submenu "Ubuntu 16.04" {
+set isofile=/Ubuntu/ubuntu-1.04-desktop-amd64.iso
+loopback loop $isofile
+menuentry "Try Ubuntu 16.04 without installing" {
+linux (loop)/casper/vmlinuz.efi file=/cdrom/preseed/
+ubuntu.seed boot=casper iso-scan/filename=$isofile quiet
+splash ---
+initrd (loop)/casper/initrd.lz
+}
+menuentry "Install Ubuntu 16.04" {
+linux (loop)/casper/vmlinuz.efi file=/cdrom/preseed/
+ubuntu.seed boot=casper iso-scan/filename=$isofile only-
+ubiquity quiet splash ---
+  initrd (loop)/casper/initrd.lz
+ }
+}
+EOL
+
+<<ubuntu_directory
+Create the Ubuntu directory on the drive and copy over the ISO file.
+Then unmount the drive and reboot from the stick. You should see a GRUB menu 
+with one entry for Ubuntu that opens up to reeal boot and install options.
+ubuntu_directory
+
 
 
