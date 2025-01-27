@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Ensure the script is run as root
 if [ "$(id -u)" -ne 0 ]; then
@@ -15,8 +15,14 @@ fi
 
 DEVICE="$1"
 
+parted --script "$DEVICE" print | grep -oP '^\s*\d+' | while read PART_NUM; do
+    parted --script "$DEVICE rm "$PART_NUM"
+done
+
+echo "All partitions have been deleted on $DEVICE."
+
 # Confirm with the user before proceeding
-echo "WARNING: This will erase all data on the device $DEVICE!"
+echo "WARNING: This will delete all partitions on the device $DEVICE!"
 read -p "Do you want to continue? (y/n): " CONFIRM
 if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
     echo "Aborted."
