@@ -139,7 +139,7 @@ catch() {
                         rm -rf "${ISO_NAME}"*
 						trap 'catch '${exit_code}' '${LINENO}'' ERR INT TERM EXIT
 						echo -e "\n\nStarting download via wget..."
-						wet -o "${DESTINATION}"/"${ISO_NAME}" "${ISO_URL}"
+						wget -o "${DESTINATION}"/"${ISO_NAME}" "${ISO_URL}"
 						echo -e "\n\nExit status (0 means success; 1 means error): $?"
                     fi
 
