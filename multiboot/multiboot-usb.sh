@@ -112,6 +112,37 @@ catch() {
   echo -e "Exit code for .iso removal: $?"
 }
 
+# 3) Read user input for .iso image URL variable ISO
+
+		                            echo -e "\n\nDesired .iso download URL? "
+
+					         read -r ISO_URL
+
+					    echo -e "\n\nDesired filename for .iso download? "
+
+					         read -r ISO_NAME
+
+
+		                      # 4) Test image variable non-existence && download using wget inside while loop
+
+		            cd "${DESTINATION}"
+		            find "${DESTINATION}" -name "${ISO_NAME}".iso
+		            exit_code=$?
+
+		            if [ $exit_code -ne 0 ] && [ $exit_code -ne 14 ]; then
+                        echo "\n\n${ISO_NAME} not found. Catching..."
+
+					else
+						echo -e "\n\n${ISO_NAME} already exists. The file resides in the following directory: ${DESTINATION}"
+						echo -e "\nIt may just be a partial download. To be on the safe side, I'll delete it.\n"
+                        echo -e "\nRemoving files that start with ${ISO_NAME}...\n"
+                        rm -rf "${ISO_NAME}"*
+						trap 'catch '${exit_code}' '${LINENO}'' ERR INT TERM EXIT
+						echo -e "\n\nStarting download via wget..."
+						wet -o "${DESTINATION}"/"${ISO_NAME}" "${ISO_URL}"
+						echo -e "\n\nExit status (0 means success; 1 means error): $?"
+                    fi
+
 
 
 
