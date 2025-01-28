@@ -102,5 +102,16 @@ echo -e "\n\n${DESTINATION} already exists. The file will be placed in ${DESTINA
 
 fi
 
+catch() {
+  exit_code="${1}"
+  line_number="${2}"
+  iso_name="${ISO_NAME}"
+  echo -e "SIGINT: Exit code ${exit_code} at about line number ${line_number}.\n"
+  echo -e "Removing ${iso_name}...\n"
+  rm -rf "${ISO_NAME}"*
+  echo -e "Exit code for .iso removal: $?"
+}
+
+
 
 
