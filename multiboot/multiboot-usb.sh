@@ -95,14 +95,21 @@ done
           # 10) Create a GRUB configuration file to boot the distros on your hard drive
           grub-mkconfig -o /media/MULTIBOOT/boot/grub/grub.cfg
 
-               # Remove everythin after the line that says ### END/etc/grub.d/00_header ###
+               # 11) Remove everythin after the line that says ### END/etc/grub.d/00_header ###
                sed '/### END/etc/grub.d/00_header ###/ q' /media/MULTIBOOT/boot/grub/grub.cfg
 
+               # 12) Output contents of configuration file
                cat /media/MULTIBOOT/boot/grub/grub.cfg
                sleep 10
 
 
+################################################
+# Add a populated menu to the GRUB shell 
+################################################
+
+
 FILE="/media/MULTIBOOT/boot/grub/grub.cfg"
+
 cat <<'EOL' >> "$FILE"
 submenu "Ubuntu 16.04" {
 set isofile=/Ubuntu/ubuntu-1.04-desktop-amd64.iso
@@ -122,32 +129,27 @@ ubiquity quiet splash ---
 }
 EOL
 
-pwd
+################################################
+# Get my bearings
+################################################
+
+# Reveal the current workin directory
+     pwd
+
+# List block devices  
+     lsblk
+
+
 # Create the Ubuntu directory on the drive and copy over the ISO file.
 # Then unmount the drive and reboot from the stick. You should see a GRUB menu 
 # with one entry for Ubuntu that opens up to reveal boot and install options.
 
 
 # I have opted to download an .iso file directly to a specific directory on the stick instead
-# Download .iso image
 
-# 1) Read user input for directory variable DESTINATION
-echo "Desired .iso download directory? (Please enter absolute path) "
-
-read -r DESTINATION
-
-# 2) Test directory variable non-existence && mkdir -p /media/MULTIBOOT/Ubuntu
-
-if [[ ! -d "${DESTINATION}" ]]; then
-
-echo -e "\n\n${DESTINATION} not found. Making directory ${DESTINATION}..."
-mkdir -p /media/MULTIBOOT/Ubuntu
-
-else 
-
-echo -e "\n\n${DESTINATION} already exists. The file will be placed in ${DESTINATION}."
-
-fi
+################################################
+# Download the .iso file(s)
+################################################
 
 catch() {
   exit_code="${1}"
@@ -159,37 +161,62 @@ catch() {
   echo -e "Exit code for .iso removal: $?"
 }
 
-# 3) Read user input for .iso image URL variable ISO
 
-		                            echo -e "\n\nDesired .iso download URL? "
+# 1) Read user input for directory variable DESTINATION
+echo "Desired .iso download directory? (Please enter absolute path) "
 
-					         read -r ISO_URL
-
-					    echo -e "\n\nDesired filename for .iso download? "
-
-					         read -r ISO_NAME
+read -r DESTINATION
 
 
-		                      # 4) Test image variable non-existence && download using wget inside while loop
+     # 2) Test directory variable non-existence && mkdir -p /media/MULTIBOOT/Ubuntu
+
+     if [[ ! -d "${DESTINATION}" ]]; then
+
+          echo -e "\n\n${DESTINATION} not found. Making directory ${DESTINATION}..."
+          mkdir -p /media/MULTIBOOT/Ubuntu
+
+     else 
+
+          echo -e "\n\n${DESTINATION} already exists. The file will be placed in ${DESTINATION}."
+
+     fi
+
+
+
+          # 3) Read user input for .iso image URL variable ISO
+
+	       echo -e "\n\nDesired .iso download URL? "
+
+	            read -r ISO_URL
+
+	       echo -e "\n\nDesired filename for .iso download? "
+
+		    read -r ISO_NAME
+
+
+	        # 4) Test image variable non-existence && download using wget inside while loop
 
 		            cd "${DESTINATION}"
 		            find "${DESTINATION}" -name "${ISO_NAME}".iso
 		            exit_code=$?
 
 		            if [ $exit_code -ne 0 ] && [ $exit_code -ne 14 ]; then
-                        echo "\n\n${ISO_NAME} not found. Catching..."
+                                 echo "\n\n${ISO_NAME} not found. Catching..."
 
 					else
 						echo -e "\n\n${ISO_NAME} already exists. The file resides in the following directory: ${DESTINATION}"
 						echo -e "\nIt may just be a partial download. To be on the safe side, I'll delete it.\n"
-                        echo -e "\nRemoving files that start with ${ISO_NAME}...\n"
-                        rm -rf "${ISO_NAME}"*
-						trap 'catch '${exit_code}' '${LINENO}'' ERR INT TERM EXIT
-						echo -e "\n\nStarting download via wget..."
-						wget -o "${DESTINATION}"/"${ISO_NAME}" "${ISO_URL}"
-						echo -e "\n\nExit status (0 means success; 1 means error): $?"
-                    fi
+                                                echo -e "\nRemoving files that start with ${ISO_NAME}...\n"
+                                                rm -rf "${ISO_NAME}"*
+						     trap 'catch '${exit_code}' '${LINENO}'' ERR INT TERM EXIT
+						     echo -e "\n\nStarting download via wget..."
+						     wget -o "${DESTINATION}"/"${ISO_NAME}" "${ISO_URL}"
+						     echo -e "\n\nExit status (0 means success; 1 means error): $?"
+                            
+			    fi
 
+      
+      # 5) Unmount the drive
       umount "$DEVICE"
 
 
