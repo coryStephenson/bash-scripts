@@ -49,17 +49,58 @@ parted --script "$DEVICE" name 1 MULTIBOOT
 # 7) Make the directory that will contain the GRUB files
 mkdir -p /media/MULTIBOOT/boot
 
-# MBR booting
-grub-install --target=i386-pc --boot-directory=/media/MULTIBOOT/boot "$DEVICE"
 
-# Create a GRUB configuration file to boot the distros on your hard drive
-grub-mkconfig -o /media/MULTIBOOT/boot/grub/grub.cfg
+scheme() {
 
-# Remove everythin after the line that says ### END/etc/grub.d/00_header ###
-sed '/### END/etc/grub.d/00_header ###/ q' /media/MULTIBOOT/boot/grub/grub.cfg
+PS3=$'\n\n'"Which partition scheme do you prefer in this case? "
+COLUMNS=1
+partition=("MBR partitioning scheme (Standard for firmware interface: BIOS)" "GPT partitioning scheme (Specification for interface b/w operating system and firmware: UEFI)")
 
-cat /media/MULTIBOOT/boot/grub/grub.cfg
-sleep 10
+while true
+do
+        echo -e "\nSELECT PARTITION SCHEME\n\n"
+   select a in "${partition[@]}";
+       do
+
+       case $a in
+
+
+          "MBR partitioning scheme (Standard for firmware interface: BIOS)")
+
+   
+                                                                                # 8) Introduce the MBR partitioning scheme (Standard for firmware interface: BIOS)
+                                                                                     grub-install --target=i386-pc --boot-directory=/media/MULTIBOOT/boot "$DEVICE"
+
+	                                                                        ;;
+
+
+          "GPT partitioning scheme (Specification for interface b/w operating system and firmware: UEFI)")
+
+                                                                                # 9) Introduce the GPT partitioning scheme (Specification for interface b/w operating system and firmware: UEFI)
+                                                                                     grub-install --target=x86_64-efi --boot-directory=/media/MULTIBOOT/boot "$DEVICE"
+
+	                                                                        ;;
+
+          *) echo -e "\nInvalid entry. Please try an option on display."
+
+             scheme
+	  ;;
+      esac
+    done
+done
+
+}
+
+     
+          # 10) Create a GRUB configuration file to boot the distros on your hard drive
+          grub-mkconfig -o /media/MULTIBOOT/boot/grub/grub.cfg
+
+               # Remove everythin after the line that says ### END/etc/grub.d/00_header ###
+               sed '/### END/etc/grub.d/00_header ###/ q' /media/MULTIBOOT/boot/grub/grub.cfg
+
+               cat /media/MULTIBOOT/boot/grub/grub.cfg
+               sleep 10
+
 
 FILE="/media/MULTIBOOT/boot/grub/grub.cfg"
 cat <<'EOL' >> "$FILE"
