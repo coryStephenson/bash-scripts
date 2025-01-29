@@ -1,46 +1,52 @@
 #!/usr/bin/env bash
 
-# Ensure the script is run as root
+# 1) Ensure the script is run as root
 if [ "$(id -u)" -ne 0 ]; then
     echo "This script must be run as root (use sudo)."
     exit 1
 fi
 
-# Check if a device argument was provided
-if [ -z "$1" ]; then
-    echo "Usage: $0 /dev/sdX"
-    echo "Replace /dev/sdX with the actual device name (e.g., /dev/sda)"
-    exit 1
-fi
+     # 2) Check if a device argument was provided
+     if [ -z "$1" ]; then
+         echo "Usage: $0 /dev/sdX"
+         echo "Replace /dev/sdX with the actual device name (e.g., /dev/sda)"
+         exit 1
+     fi
 
-DEVICE="$1"
+     DEVICE="$1"
 
-parted --script "$DEVICE" print | grep -oP '^\s*\d+' | while read PART_NUM; do
-    parted --script "$DEVICE" rm "$PART_NUM"
-done
+          # 3) Delete any existing partitions on the USB stick
+          parted --script "$DEVICE" print | grep -oP '^\s*\d+' | while read PART_NUM; do
+              parted --script "$DEVICE" rm "$PART_NUM"
+          done
 
-echo "All partitions have been deleted on $DEVICE."
+          
+	  echo "All partitions have been deleted on $DEVICE."
 
-# Confirm with the user before proceeding
-echo "WARNING: This will delete all partitions on the device $DEVICE!"
-read -p "Do you want to continue? (y/n): " CONFIRM
-if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
-    echo "Aborted."
-    exit 1
-fi
+               # 4) Confirm with the user before proceeding
+               echo "WARNING: This will delete all partitions on the device $DEVICE!"
+               read -p "Do you want to continue? (y/n): " CONFIRM
+                    if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
+                         echo "Aborted."
+                         exit 1
+                    fi
 
-# Run parted to create a new partition table and partition
+# 5) Run parted to create a new partition table and partition
 parted --script "$DEVICE" mklabel msdos
 parted --script "$DEVICE" mkpart primary fat32 1MiB 100%
 parted --script "$DEVICE" name 1 MULTIBOOT
 
-# Format the partition as FAT32
-mkfs.fat -F 32 "${DEVICE}1"
+     # 6) Format the partition as FAT32
+     mkfs.fat -F 32 "${DEVICE}1"
 
-# Done
-echo "Partitioning and formatting complete. The partition has been named 'MULTIBOOT'."
 
-# Install GRUB on USB stick to make it bootable
+     echo "Partitioning and formatting complete. The partition has been named 'MULTIBOOT'."
+
+################################################
+# Install GRUB on USB stick to make it bootable 
+################################################
+
+# 7) Make the directory that will contain the GRUB files
 mkdir -p /media/MULTIBOOT/boot
 
 # MBR booting
@@ -75,7 +81,7 @@ ubiquity quiet splash ---
 }
 EOL
 
-
+pwd
 # Create the Ubuntu directory on the drive and copy over the ISO file.
 # Then unmount the drive and reboot from the stick. You should see a GRUB menu 
 # with one entry for Ubuntu that opens up to reveal boot and install options.
