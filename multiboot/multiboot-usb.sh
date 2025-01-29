@@ -16,7 +16,7 @@ fi
 DEVICE="$1"
 
 parted --script "$DEVICE" print | grep -oP '^\s*\d+' | while read PART_NUM; do
-    parted --script "$DEVICE rm "$PART_NUM"
+    parted --script "$DEVICE" rm "$PART_NUM"
 done
 
 echo "All partitions have been deleted on $DEVICE."
@@ -56,7 +56,7 @@ cat /media/MULTIBOOT/boot/grub/grub.cfg
 sleep 10
 
 FILE="/media/MULTIBOOT/boot/grub/grub.cfg"
-cat <<EOL >> "$FILE"
+cat <<'EOL' >> "$FILE"
 submenu "Ubuntu 16.04" {
 set isofile=/Ubuntu/ubuntu-1.04-desktop-amd64.iso
 loopback loop $isofile
@@ -142,6 +142,8 @@ catch() {
 						wget -o "${DESTINATION}"/"${ISO_NAME}" "${ISO_URL}"
 						echo -e "\n\nExit status (0 means success; 1 means error): $?"
                     fi
+
+      umount "$DEVICE"
 
 
 
