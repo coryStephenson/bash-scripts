@@ -1,0 +1,1210 @@
+# Config for GNU GRand Unified Bootloader (GRUB) (2)
+  # /boot/grub2/grub.cfg
+  # or
+  # /boot/grub/grub.cfg
+  # Mostly only 'legacy' CSM/BIOS boot methods currently.
+  # Unable to boot loop entries with Secure Boot
+
+# Notes:
+  # Description:
+    # This grub.cfg file was created by Lance http://www.pendrivelinux.com
+    # Suggested Entries and the suggester, if available, will also be noted.
+    # and then improved by Pysis, incorporating others from the other links.
+
+  # Other bootloaders:
+    # Source: https://www.reddit.com/r/linuxmasterrace/comments/siystc/what_boot_managerloader_do_you_use/
+    # Alternatives:
+      # rEFIend
+      # systemd-boot
+    # Curious:
+      # Clover
+    # Potentially Obsolete:
+      # BURG
+      # LILO
+
+  # Improvement Sources:
+    # https://www.pendrivelinux.com/boot-multiple-iso-from-usb-via-grub2-using-linux/
+    #Used GRUB2 with command `grub2-install` instead, along with the `--boot-directory` parameter.
+    # If you get an error about failing 'to get a canonical path', or folders not existing on the device, then again, you need to run the command as a privileged user.
+    #     If you get errors concerning a bad superblock, and unable to install grub, try rewriting the filesystem again.
+    # https://gist.github.com/jamiekurtz/26c46b3e594f8cdd453a
+    # https://gist.github.com/noisufnoc/e0053d738f5fbb679535
+    # https://gist.github.com/samdoran/90056b8e4a2aedc6a3e8
+    # https://gist.github.com/yeahunter/9eca12b3db064e5dc23b
+    # https://gist.github.com/jeekl/5564476
+    # https://gist.github.com/tactig/70cf264a9aff24822c53
+    # https://gist.github.com/lkraav/907965
+    # https://wiki.archlinux.org/index.php/Multiboot_USB_drive
+    #   and this one.  How did I forget about these!!!!
+    #   TODO: If my device only works with MBR-compatible computers, maybe perform this process: "Hybrid UEFI GPT + BIOS GPT/MBR boot"
+    # https://help.ubuntu.com/community/Grub2/ISOBoot/Examples
+    #   Seems to be a gold mine for my purposes!!
+    # http://www.coreboot.org/GRUB2
+    # http://www.backtrack-linux.org/forums/showthread.php?t=42722
+    # http://www.linuxdevcenter.com/pub/a/linux/excerpts/9780596100797/kernel-boot-command-line-parameter-reference.html
+    # https://wiki.archlinux.org/index.php/Grub2
+    # https://www.rmprepusb.com/tutorials/126_Fedora
+    #   Mostly for most, but not all, CentOS progress..
+    # https://unix.stackexchange.com/a/105065/65319
+    #   EDIT: This is not going to fly for Centos 6.4 :/ which has an ancient version of dracut.
+    # https://github.com/koptein/multibootstick/blob/master/grub.cfg
+    # https://github.com/comdvas/grub_multi_boot_example/blob/master/grub.cfg
+    # https://github.com/GregHerendi/grub-config-lib
+    #   Pretty sophisticated!
+    # https://github.com/mbusb/multibootusb/blob/master/scripts/update_cfg_file.py
+    #   The whole project!!
+    # https://github.com/matt-hayden/boot/blob/master/usb-drive-common/boot/grub/
+    # https://www.experts-exchange.com/questions/21028532/KNOPPIX-boot-from-HD-cofig-LILO-to-boot-from-knoppix-CD.html#a11357456
+    # http://damnsmalllinux.org/wiki/install_to_usb_from_within_linux.html#Method_III:_Using_GRUB_as_boot_loader
+    # https://github.com/thias/glim
+    # https://www.tecmint.com/debian-based-linux-distributions/
+    # https://en.wikipedia.org/wiki/Comparison_of_Linux_distributions
+    # https://help.ubuntu.com/community/Grub2/Setup
+    # https://www.gnu.org/software/grub/manual/grub/grub.html
+    # https://github.com/vinceliuice/grub2-themes
+    # https://a1ive.github.io/grub2-filemanager/
+    # https://github.com/a1ive/grub2-filemanager
+    # https://wiki.osdev.org/El-Torito
+    # Great GRUB2 Reference: http://www.dedoimedo.com/computers/grub-2.html
+    # https://github.com/rdmitry0911/booting-TrueNAS-from-USB2SSD-drive-via-GRUB
+    # https://github.com/mbusb/multibootusb # dead
+    # https://github.com/aguslr/multibootusb
+    # https://github.com/Mexit/MultiOS-USB
+    # https://github.com/niemtin007/Multiboot-Toolkit
+    # https://unix.stackexchange.com/questions/4202/freenas-grub2-booting-iso
+    # https://stackoverflow.com/questions/34938067/reading-grub2-debug-logs
+
+  # Explanations:
+    # Suffixes/Acronyms/Abbreviations:
+      # DWY - Doesn't work yet.  Obviously incomplete, or tested and no working combination of boot information has been found yet.
+      # Untested - Boot information copied from some source, but not executed/tested yet.
+      # WIP - Work in progress.  DWY, but has focus for eventually producing a success result.
+    # For variables, be sure to use double-quotes to have them actually resolve in the string.
+    # Need to re-declare variables inside sub-menus because they open a new "context"..... great..
+      # Source: https://bugs.launchpad.net/ubuntu/+source/grub2/+bug/1175127
+      # Or not..
+        # https://gist.github.com/Pysis868/27203177bdef15fbb70c?permalink_comment_id=2381695#gistcomment-2381695
+    # Possibly useful notes for adding more EFI content:
+      # `linuxefi` and `initrdefi`
+      # Hybrid ESP?
+
+  # Linting:
+    # Make sure every 'submenu' command contains 3 periods at the end, connected to the main content string's last character
+
+  # Testing Strategies:
+    # sudo qemu-system-x86_64 -drive "format=raw,file=$drive";
+      # Must unmount partition to flush saved data??..
+    # USB Device Passthrough/Filtering
+      # Stopped being detected by Virtual Box bootloader, or I was not finding the alternative boot option.
+      # May have worked for me before, at least on a Windows Host, but stopped?
+      # Tried my old USB2 ports since the USB3 ones did not seem to work, same failure.
+      # Used the same old USB3 flash drive.
+    # Virtual Box/Machine Hypervisor Storage Drive Passthrough
+    # Obsoleted by USB passthrough?
+    # KVM may be easier
+    # Commands & Notes
+      # `VBoxManage internalcommands createrawvmdk -filename \
+      # path-to-file.vmdk -rawdisk /dev/sda`
+      # `VBoxManage storageattach WindowsXP --storagectl "IDE Controller" \
+      # --port 0 --device 0 --type hdd --medium path-to-file.vmdk`
+      # On a Windows host, instead of the above device specification, for example use \\.\PhysicalDrive0.
+      # On a Mac OS X host, instead of the above device specification use for example /dev/disk1.
+      # Note that on Mac OS X you can only get access to an entire disk if no volume is mounted from it.
+    # Sources:
+      # https://www.partitionwizard.com/partitionmanager/virtualbox-boot-from-usb.html
+      # https://www.howtogeek.com/187721/how-to-boot-from-a-usb-drive-in-virtualbox/
+      # https://www.virtualbox.org/manual/ch09.html#rawdisk
+
+  # Drive / Storage Medium Arrangement/Format:
+    # > lsblk
+    # NAME      MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+    #
+    # sdX         8:128  1  57.9G  0 disk
+    # ├─sdX1      8:129  1  39.5G  0 part .../MULTIBOOT
+    # ├─sdX2      8:130  1     1G  0 part .../LIBREELEC
+    # ├─sdX3      8:131  1     1K  0 part
+    # ├─sdX5      8:133  1  13.1G  0 part .../e0e5921c-9843-4d80-9632-7e0186cbca27
+    # └─sdX6      8:134  1   1.9G  0 part
+
+    # > sudo fdisk -l /dev/sdi
+    # Device     Boot     Start       End  Sectors  Size Id Type
+    # /dev/sdX1  *         2048  82915264 82913217 39.5G  c W95 FAT32 (LBA)
+    # /dev/sdX2        82915328  85012479  2097152    1G  b W95 FAT32
+    # /dev/sdX3        89982974 121436159 31453186   15G  f W95 Ext'd (LBA)
+    # /dev/sdX5        89982976 117438463 27455488 13.1G 83 Linux
+    # /dev/sdX6       117440512 121436159  3995648  1.9G 82 Linux swap / Solaris
+
+  # TODO:
+    # Separate different types of booting options into more grub config files, if possible.  Look into it.
+      # https://github.com/thias/glim/blob/master/grub2/grub.cfg
+    # Other notes in the file...
+
+
+
+## Entire Config Start
+
+
+
+# GUI Settings
+  # Source: https://github.com/thias/glim/blob/master/grub2/grub.cfg
+  # Required for GUI and to prevent "No video mode set" error
+  insmod all_video
+
+  # Keep the same graphic mode for kernel booting (passed as vga=)
+  # other values are "text" or any gfxmode value
+  set gfxpayload=keep
+
+  # Enable GUI
+  terminal_output gfxterm
+
+  loadfont unicode
+
+  insmod png
+  set theme=${prefix}/themes/invader/theme.txt
+  export theme
+
+# TUI Settings
+  # Menu Colors
+  set menu_color_normal=white/black
+  set menu_color_highlight=white/cyan
+
+# Other Settings
+  # Timeout for menu
+  # set timeout=5
+
+  # Default boot entry
+  # set default=0
+
+  set showLocalInstalls='false';
+  # set showWindows='false'; # Some entries such as PE and DOS official and not could still be useful.
+
+  #set pager=1
+
+  #set debug=all
+
+# Path Variables
+  set isoPath="/ISOs"
+  set imgPath="/IMGs"
+  set fsPath="/FSs"
+  set linuxPath="$isoPath/Linux"
+  set toolPath="$isoPath/Tools"
+  set memdiskPath="/boot/memdisk"
+  set grub4dosPath="/boot/grub.exe"
+  export isoPath
+  export imgPath
+  export fsPath
+  export linuxPath
+  export toolPath
+  export memdiskPath
+  export grub4dosPath
+
+# Main boot root area starting location
+  probe --set rootuuid --fs-uuid $root
+  export rootuuid
+
+#Investigative Code
+
+
+# menuentry "Test vars" {
+  # set pager=1
+  # #set debug=all
+
+  # #grub_dprintf("!!!!TEST!!!!"); # Not recognized
+  # echo "isoPath   : $isoPath"
+  # echo "linuxPath : $linuxPath"
+  # echo "genPath   : $genPath"
+  # echo "rcaPath   : $rcaPath"
+  # #pause # Not recognized
+  # read
+# }
+
+
+## Menu Entries Start
+
+
+if test "$showLocalInstalls" = 'true'
+  submenu 'Local OS installations... (broken)' --class desktop --class os {
+    submenu "Elementary OS..." --class elementary --class debian --class os {
+      menuentry "Elementary OS on Disk" --class elementary --class debian --class os {
+        set root=(hd0,msdos6)
+        linux /boot/vmlinuz-3.2.0-88-generic root=/dev/sda6
+        initrd /boot/initrd.img-3.2.0-88-generic
+        boot
+      }
+
+      menuentry "Elementary OS on Disk RO, Quiet, Splash" --class elementary --class debian --class os {
+        set root=(hd0,msdos6)
+        linux /boot/vmlinuz-3.2.0-88-generic root=/dev/sda6 ro quiet splash
+        initrd /boot/initrd.img-3.2.0-88-generic
+        boot
+      }
+
+      menuentry "Elementary OS on Disk RO, Recovery, NoModeSet" --class elementary --class debian --class os {
+        set root=(hd0,msdos6)
+        linux /boot/vmlinuz-3.2.0-88-generic root=/dev/sda6 ro recovery nomodeset
+        initrd /boot/initrd.img-3.2.0-88-generic
+        boot
+      }
+    }
+
+    submenu "Windows/DOS..." --class windows --class os {
+      set winDOSPath="$isoPath/Win-DOS"
+      export winDOSPath
+
+      # Sources: oldalfer, AvinashReddy3108
+      menuentry 'Windows 10' --class win10 --class windows --class os {
+        set root=(hd0,7)
+        # insmod part_msdos ### This line is not necessary ###
+        # insmod ntfs ### This line is not necessary ###
+        insmod ntldr
+        insmod ntfscomp
+        # drivemap -s (hd0) ${root} ### This line is not necessary ###
+        ntldr /bootmgr
+      }
+
+      menuentry "Run Windows 7 Ultimate 64-bit Installer (Doesn't work)" --class win7 --class windows --class os {
+        #insmod part_msdos
+        #insmod ntfs
+        set root='(hd0,msdos5)'
+        #search --no-floppy --fs-uuid --set=root 01D0DC21970FC910
+        #drivemap -s (hd0) ${root}
+        chainloader +1
+        boot
+      }
+
+      menuentry "Windows 7 (loader) (on /dev/sda1) (Doesn't work)" --class win7 --class windows --class os {
+        insmod part_msdos
+        insmod ntfs
+        insmod ntldr
+        set root='hd0,msdos5'
+        ntldr /bootmgr
+      }
+    }
+  }
+fi
+
+submenu 'OS Live/Install...' --class desktop --class os {
+  submenu 'Linux' --class linux --class desktop --class os {
+    submenu 'General Purpose / Desktop / Workstation  Server...' --class desktop --class linux --class os {
+      set genPath="$linuxPath/General"
+      export genPath
+
+      submenu 'Red Hat-based...' --class redhat --class os {
+        set rhPath="$genPath/RedHat"
+        export rhPath
+        # RHEL
+
+        # Maybe try EFI boot again next..  Was this just for practice?
+        submenu 'Fedora...' --class fedora --redhat --class os {
+          # https://fedoraproject.org/wiki/Logo/UsageGuidelines
+          # https://docs.fedoraproject.org/en-US/Fedora/19/html/Installation_Guide/ap-admin-options.html
+          # https://docs.fedoraproject.org/en-US/quick-docs/creating-and-using-a-live-installation-image/#creating_usb_stick_from_a_running_live_environment
+          # https://docs.fedoraproject.org/en-US/fedora/f36/install-guide/install/Booting_the_Installation/
+          # https://github.com/haraldh/dracut/blob/master/dracut.cmdline.7.asc
+          # https://docs.fedoraproject.org/en-US/fedora/f36/install-guide/advanced/Boot_Options/
+          # https://bugzilla.redhat.com/show_bug.cgi?id=824617
+
+          set fedoraPath="$rhPath/Fedora"
+          export fedoraPath
+
+          menuentry 'Fedora Workstation Live 64-bit 38 (1.6)' --class fedora-workstation --class fedora --redhat --class os {
+            set isofile="$fedoraPath/Fedora-Workstation-Live-x86_64-38/Fedora-Workstation-Live-x86_64-38-1.6.iso"
+            set isolabel="Fedora-WS-Live-38-1-6"
+
+            loopback loop "$isofile"
+
+            #linux (loop)/isolinux/vmlinuz root=live:CDLABEL=$isolabel iso-scan/filename="$isofile" rd.live.image quiet
+            #initrd (loop)/isolinux/initrd.img
+
+            # linux (loop)/images/pxeboot/vmlinuz root=live:CDLABEL=$isolabel iso-scan/filename="$isofile" rd.live.image quiet rhgb
+
+            #linux (loop)/images/pxeboot/vmlinuz root=live:CDLABEL=$isolabel rd.live.image iso-scan/filename=$isofile rd.live.debug=1 rd.debug rd.shell rd.info
+
+            # linux (loop)/images/pxeboot/vmlinuz root=live:hd:/dev/loop0 rd.live.image iso-scan/filename=$isofile rd.live.debug=1 rd.debug rd.shell rd.info
+
+            linux (loop)/images/pxeboot/vmlinuz root=live:/dev/loop0 rd.live.image iso-scan/filename=$isofile rd.live.debug=1 rd.debug rd.shell rd.info
+
+            #linux (loop)/images/pxeboot/vmlinuz root=live:LABEL=$isolabel rd.live.image iso-scan/filename=$isofile rd.live.debug=1 rd.debug rd.shell rd.info
+
+            #linux (loop)/images/pxeboot/vmlinuz inst.stage2=hd:LABEL=$isolabel iso-scan/filename=$isofile
+
+            #linux (loop)/images/pxeboot/vmlinuz root=/dev/loop0 inst.stage2=hd:LABEL=$isolabel iso-scan/filename=$isofile
+
+            initrd (loop)/images/pxeboot/initrd.img
+          }
+
+          # menuentry 'Fedora Workstation Live 64-bit 38 (1.6) (GLIM)' --class fedora-workstation --class fedora --redhat --class os {
+          #   set isofile="$fedoraPath/Fedora-Workstation-Live-x86_64-38/Fedora-Workstation-Live-x86_64-38-1.6.iso"
+          #
+          #   # set isoname=Workstation
+          #   # use "${isoname}"
+          #   # loop $isofile
+          #   loopback loop "$isofile"
+          #   probe --set isolabel --label (loop)
+          #
+          #   linux (loop)/images/pxeboot/vmlinuz root=live:CDLABEL=${isolabel} rd.live.image iso-scan/filename=${isofile}
+          #
+          #   initrd (loop)/images/pxeboot/initrd.img
+          # }
+
+          menuentry 'Fedora Server 64-bit 38 (1.6)' --class fedora-server --class fedora --redhat --class os {
+            set isofile="$fedoraPath/Fedora-Server-dvd-x86_64-38/Fedora-Server-dvd-x86_64-38-1.6.iso"
+            set isolabel="Fedora-S-dvd-x86_64-38"
+
+            loopback loop "$isofile"
+
+            #linux (loop)/images/pxeboot/vmlinuz inst.stage2=CDLABEL=$isolabel iso-scan/filename="$isofile" quiet
+
+            #linux (loop)/images/pxeboot/vmlinuz inst.stage2=LABEL=$isolabel iso-scan/filename="$isofile"
+
+            #linux (loop)/images/pxeboot/vmlinuz inst.stage2=hd:LABEL=$isolabel iso-scan/filename="$isofile"
+
+            #linux (loop)/images/pxeboot/vmlinuz inst.stage2=/dev/loop0 iso-scan/filename="$isofile"
+            linux (loop)/images/pxeboot/vmlinuz inst.stage2=hd:/dev/loop0 iso-scan/filename="$isofile"
+
+            #linux (loop)/images/pxeboot/vmlinuz root=/dev/loop0 iso-scan/filename="$isofile"
+
+            initrd (loop)/images/pxeboot/initrd.img
+          }
+
+          # https://docs.fedoraproject.org/en-US/fedora-coreos/bare-metal/
+          # https://github.com/coreos/grub ?
+          menuentry 'Fedora CoreOS Live 64-bit 35 (3.0) (DWY)' --class fedora-coreos --class fedora --redhat --class os {
+            set isofile="$fedoraPath/fedora-coreos-35.20220116.3.0-live.x86_64.iso"
+            loopback loop "$isofile"
+
+            # Error: systemd init error timed out looking for device by-label the liveiso name.
+            linux (loop)/images/pxeboot/vmlinuz mitigations=auto,nosmt coreos.liveiso=fedora-coreos-35.20220116.3.0 ignition.firstboot ignition.platform.id=metal
+
+            # Error: Some systemd-shutdown log I don't know what the exact cause is..
+            #linux (loop)/images/pxeboot/vmlinuz mitigations=auto,nosmt root=live:CDLABEL=fedora-coreos-35.20220116.3.0 coreos.liveiso=fedora-coreos-35.20220116.3.0 ignition.firstboot ignition.platform.id=metal
+
+            # Error: Some systemd-shutdown log I don't know what the exact cause is..
+            #linux (loop)/images/pxeboot/vmlinuz root=live:CDLABEL=Fedora-CoreOS-Live-35-3-0 iso-scan/filename="$isofile" mitigations=auto,nosmt install_to_usb_from_within_linuxcoreos.liveiso=fedora-coreos-35.20220116.3.0 ignition.firstboot ignition.platform.id=metal
+
+            initrd (loop)/images/pxeboot/initrd.img (loop)/images/ignition.img
+          }
+
+          # Fedora Silverblue
+
+          # https://fedora.fandom.com/wiki/Fedora_Atomic
+          # It was discontinued in early 2019, making it's last release based on Fedora 29.
+          menuentry 'Fedora Atomic 64-bit 25 (20170215.1) (Obsolete)' --class fedora-atomic --class fedora --redhat --class os {
+            set isofile="$fedoraPath/Fedora-Atomic-ostree-x86_64-25-20170215.1.iso"
+            loopback loop "$isofile"
+            linux (loop)/isolinux/vmlinuz inst.stage2=hd:LABEL=Fedora-Atomic-ostree-x86_64-25 iso-scan/filename="$isofile" quiet
+            initrd (loop)/isolinux/initrd.img
+          }
+        }
+
+        submenu "CentOS..." --class centos --class redhat --class os {
+          set centPath="$rhPath/CentOS"
+          export centPath
+
+          # TODO: Later maybe look into a CentOS live option, either with different boot parameters, install media, or both.
+          menuentry "CentOS 7 x86_64 minimal" --class centos --class redhat --class os {
+            set isofile="$centPath/CentOS-7-x86_64-Minimal-1611.iso"
+            loopback loop "$isofile"
+            linux (loop)/isolinux/vmlinuz inst.stage2=hd:LABEL=CentOS\x207\x20x86_64 iso-scan/filename="$isofile" quiet
+            initrd (loop)/isolinux/initrd.img
+          }
+
+          menuentry "CentOS 7 x86_64 minimal with basic video driver" --class centos --class redhat --class os {
+            set isofile="$centPath/CentOS-7-x86_64-Minimal-1611.iso"
+            loopback loop "$isofile"
+            linux (loop)/isolinux/vmlinuz inst.stage2=hd:LABEL=CentOS\x207\x20x86_64 iso-scan/filename="$isofile" quiet xdriver=vesa nomodset askmethod
+            initrd (loop)/isolinux/initrd.img
+          }
+        }
+      }
+
+      submenu "Debian-based..." --class debian --class os {
+        set dPath="$genPath/Debian"
+        export dPath
+
+        menuentry "Elementary OS 20130810 x64" --class elementary --class debian --class os {
+          set isofile="$dPath/elementaryos-stable-amd64.20130810.iso"
+          loopback loop $isofile
+          linux  (loop)/casper/vmlinuz boot=casper iso-scan/filename=$isofile quiet splash --
+          initrd  (loop)/casper/initrd.lz
+        }
+
+        menuentry "Linux Mint 17.2 x64" --class linuxmint --class debian --class os {
+          set isofile="$dPath/linuxmint-17.2-mate-64bit.iso"
+          loopback loop $isofile
+          linux (loop)/casper/vmlinuz file=/cdrom/preseed/mint.seed boot=casper initrd=/casper/initrd.lz iso-scan/filename=$isofile noeject noprompt splash --
+          initrd (loop)/casper/initrd.lz
+        }
+
+        # Raspberry Pi
+
+        submenu "Debian... (Untested)" --class debian --class os {
+          submenu "32-bit (i386)... (Untested)" --class debian --class os {
+            set isoFile="$dPath/debian-11.5.0-i386-DVD-1.iso"
+            export isoFile
+
+            menuentry "Debian 11.5.0 \"Bullseye\" - Installer" --class debian --class os {
+              loopback loop "$isoFile"
+              linux (loop)/install.386/vmlinuz
+              initrd (loop)/install.386/initrd.gz
+            }
+            # menuentry "Debian 711.5.0 \"Bullseye\" - Live system (GNOME, firmware/non-free)" --class debian --class os {
+              # set isofile="$dPath/debian-live-7.0.0-amd64-gnome-desktop+nonfree.iso"
+              # loopback loop "$isoFile"
+              # linux (loop)/live/vmlinuz boot=live
+              # initrd (loop)/live/initrd.img
+            # }
+            # menuentry 'Debian 8.2.0 amd64-netinst' --class debian --class os {
+              # set isofile='$dPath/debian-8.2.0-amd64-netinst.iso'
+              # set initrdfile='/boot/debianinitrd.gz'
+              # loopback loop "$isofile"
+              # linux (loop)/install.amd/vmlinuz vga=791 iso-scan/ask_second_pass=true iso-scan/filename=$isofile
+              # initrd $initrdfile
+            # }
+          }
+
+          # submenu "64-bit (AMD)... (Untested)" --class debian --class os {
+            # menuentry "Debian 7.0 Wheezy AMD64 Installer (netinst, firmware)" --class debian --class os {
+              # set isofile="$dPath/debian-7.0.0-amd64-firmware-netinst.iso"
+              # loopback loop "$isoFile"
+              # linux (loop)/install.amd/vmlinuz
+              # initrd (loop)/install.amd/initrd.gz
+            # }
+            # menuentry "Debian 7.0 Wheezy AMD64 Live system (GNOME, firmware/non-free)" --class debian --class os {
+              # set isofile="$dPath/debian-live-7.0.0-amd64-gnome-desktop+nonfree.iso"
+              # loopback loop "$isoFile"
+              # linux (loop)/live/vmlinuz boot=live
+              # initrd (loop)/live/initrd.img
+            # }
+            # menuentry 'Debian 8.2.0 amd64-netinst' --class debian --class os {
+              # set isofile='$dPath/debian-8.2.0-amd64-netinst.iso'
+              # set initrdfile='/boot/debianinitrd.gz'
+              # loopback loop "$isoFile"
+              # linux (loop)/install.amd/vmlinuz vga=791 iso-scan/ask_second_pass=true iso-scan/filename=$isofile
+              # initrd $initrdfile
+            # }
+          # }
+        }
+
+        # Devuan
+
+        submenu "(U/L/X/K)buntu..." --class ubuntu --class debian --class os {
+          set ubuntuPath="$dPath/Ubuntu"
+          export ubuntuPath
+          #search --set=ubuntu --fs-uuid 3cc3e652-0c1f-4800-8451-033754f68e6e
+          #configfile "($ubuntu)/boot/grub/grub.cfg"
+
+          menuentry "Ubuntu 16.10 Minimal" --class ubuntu --class debian --class os {
+            set isofile="$ubuntuPath/ubuntu-16.10-mini"
+            loopback loop $isofile
+            # linux (loop)/casper/vmlinuz boot=casper iso-scan/filename=$isofile locale=en_US.UTF-8
+            # linux (loop)/casper/vmlinuz boot=casper iso-scan/filename=$isofile liveimg noprompt noeject quiet splash --
+            linux (loop)/linux boot=casper iso-scan/filename=$isofile locale=en_US.UTF-8
+            # initrd (loop)/casper/initrd.lz
+            initrd (loop)/initrd.gz
+          }
+
+          menuentry "Ubuntu 17.10.1 Desktop 64-bit" --class ubuntu --class debian --class os {
+            set isofile="$ubuntuPath/ubuntu-17.10.1-desktop-amd64.iso"
+            loopback loop $isofile
+            linux (loop)/casper/vmlinuz.efi boot=casper iso-scan/filename=$isofile locale=en_US.UTF-8
+            initrd (loop)/casper/initrd.lz
+          }
+
+          menuentry "Ubuntu 17.10.1 Server 64-bit" --class ubuntu --class debian --class os {
+            set isofile="$ubuntuPath/ubuntu-17.10.1-server-amd64.iso"
+            loopback loop $isofile
+            linux (loop)/install/vmlinuz boot=casper iso-scan/filename=$isofile locale=en_US.UTF-8
+            initrd (loop)/install/initrd.gz
+          }
+
+          # TODO: Lubuntu
+
+          menuentry "Xbuntu 14.04 Beta - 64bit" --class xubuntu --class ubuntu --class debian --class os {
+            set isofile="$ubuntuPath/xubuntu-15.04-desktop-amd64.iso"
+            loopback loop $isofile
+            linux (loop)/casper/vmlinuz.efi boot=casper iso-scan/filename=$isofile noprompt noeject splash --
+            initrd (loop)/casper/initrd.lz
+          }
+
+          # Mini Ubuntu in "Minimal" section.
+        }
+
+        # Slax
+        # MX Linux
+        # Deepin
+        # AntiX
+        # PureOS
+      }
+
+      submenu "Arch-based/Rolling/Custom..." --class arch --class os {
+        set rcaPath="$genPath/Arch"
+        export rcaPath
+
+        # Source: https://wiki.archlinux.org/index.php/Multiboot_USB_drive#Arch_Linux_monthly_release
+        # Installing from USB: "You must specify the filesystem type for loop0"
+          # https://bbs.archlinux.org/viewtopic.php?id=212871
+          # https://bbs.archlinux.org/viewtopic.php?id=226410
+          # https://askubuntu.com/questions/143718/mount-you-must-specify-the-filesystem-type#comment172573_143723
+
+        # TODO: Boot error on 1 laptop or any?  Maybe add sleep to see if that helps as the manual analogous method seemed to help of navigating unnecessary entries and also waiting before final boot entry selection, and/or entering the config editing mode and booting from that additional state.
+        # https://bbs.archlinux.org/viewtopic.php?pid=1620387#p1620387
+        menuentry 'Arch Linux x64 2022-07-01' --class arch --class os {
+          set isofile="$rcaPath/archlinux-2022.07.01-x86_64.iso"
+          loopback loop "$isofile"
+
+          # Leftover, unused kernel boot options that may be helpful later on.
+          # video=efifb fbdev noefi single
+          # archisolabel=ARCH_201508
+          # archisobasedir=arch
+          # archisodevice=/dev/loop0
+
+          linux (loop)/arch/boot/x86_64/vmlinuz-linux img_dev=/dev/sdb1 img_loop=$isofile earlymodules=loop
+          initrd (loop)/arch/boot/x86_64/initramfs-linux.img
+        }
+
+        menuentry 'Arch Linux 32-bit 2023-03-02' --class arch --class os {
+          set isofile="$rcaPath/archlinux32-2023.03.02-i686.iso"
+          loopback loop "$isofile"
+
+          # Leftover, unused kernel boot options that may be helpful later on.
+          # video=efifb fbdev noefi single
+          # archisolabel=ARCH_201508
+          # archisobasedir=arch
+          # archisodevice=/dev/loop0
+
+          linux (loop)/arch/boot/i686/vmlinuz-linux img_dev=/dev/sdb1 img_loop=$isofile earlymodules=loop
+          initrd (loop)/arch/boot/i686/initramfs-linux.img
+          #initrd (loop)/arch/boot/intel-ucode.img,(loop)/arch/boot/amd-ucode.img,(loop)/arch/boot/i686/initramfs-linux.img
+        }
+
+        # Manjaro
+        # ArchBang?
+        # BunsenLabs ArchLinux? maybe not
+      }
+
+      submenu 'Others...' --class other --class os {
+        set othersPath="$genPath/Others"
+        export othersPath
+
+        # Declarative
+        submenu 'NixOS...' --class nixos --class os  {
+          set nixPath="$othersPath/NixOS"
+          export nixPath
+
+          menuentry 'NixOS (Gnome) 21' {
+            set isofile="$nixPath/nixos-gnome-21.05.1790.382039c05a1-x86_64-linux.iso"
+            loopback loop "$isofile"
+            linux (loop)/isolinux/vmlinuz root=live:CDLABEL=NixOS-(Gnome)-21 iso-scan/filename="$isofile" rd.live.image quiet
+            initrd (loop)/isolinux/initrd.img
+          }
+
+          menuentry 'NixOS 21.05.1790.382039c05a1 Installer ' --class installer {
+            linux /boot/bzImage ${isoboot} init=/nix/store/603911zc5920x498npg2nrl4861nd9a4-nixos-system-nixos-21.05.1790.382039c05a1/init  root=LABEL=nixos-gnome-21.05-x86_64 boot.shell_on_fail loglevel=4
+            initrd /boot/initrd
+          }
+
+          menuentry 'NixOS (Gnome) 21 3' {
+            set isofile="$nixPath/nixos-gnome-21.05.1790.382039c05a1-x86_64-linux.iso"
+            loopback loop "$isofile"
+
+            source /EFI/boot/grub.cfg
+          }
+
+          menuentry 'NixOS (Gnome) 21 4' {
+            set isofile="$nixPath/nixos-gnome-21.05.1790.382039c05a1-x86_64-linux.iso"
+            loopback loop "$isofile"
+            linux /boot/bzImage ${isoboot} init=/nix/store/603911zc5920x498npg2nrl4861nd9a4-nixos-system-nixos-21.05.1790.382039c05a1/init  root=LABEL=nixos-gnome-21.05-x86_64 boot.shell_on_fail loglevel=4
+            initrd (loop)/boot/initrd
+          }
+
+          menuentry 'NixOS (Gnome) 21 5' {
+            set isofile="$nixPath/nixos-gnome-21.05.1790.382039c05a1-x86_64-linux.iso"
+            loopback loop "$isofile"
+            linux (loop)/boot/bzImage "$isoboot" init=/nix/store/603911zc5920x498npg2nrl4861nd9a4-nixos-system-nixos-21.05.1790.382039c05a1/init  root=LABEL=nixos-gnome-21.05-x86_64 boot.shell_on_fail loglevel=4
+            initrd (loop)/boot/initrd
+          }
+        }
+
+        # Chrome/Chromium OS?
+        # Slackware
+        # TODO: Bohdi
+        # Alpine
+        # CRUX
+        # PopOS!
+        # Mandriva/PCLinuxOX
+        # Dog Linux
+        # Puppy OS (use Dog Linux instead)
+        # Sparky Linux
+      }
+    }
+
+    submenu 'Minimal...' --class minimal --class linux --class os {
+      set minimalPath="$linuxPath/Minimal"
+      export minimalPath
+
+      menuentry "CorePlus ISO" --class tinycore --class os {
+        set isofile="$minimalPath/CorePlus-current.iso"
+        loopback loop $isofile
+        #linux (loop)/boot/bzImage --
+        linux (loop)/boot/vmlinuz --
+        # Add ' loglevel=3 cde showapps desktop=flwm_topside' ?
+        #initrd (loop)/boot/tinycore.gz
+        initrd (loop)/boot/core.gz
+      }
+      menuentry "CorePlus (Variant 2)" --class tinycore --class os {
+        set isofile="$minimalPath/CorePlus-current.iso"
+        loopback loop $isofile
+        linux (loop)/boot/vmlinuz
+        initrd (loop)/boot/core.gz
+      }
+
+      # Maybe CorePlus is better.
+      menuentry "Tinycore (Obsolete?)" --class tinycore --class os {
+        set isofile="$minimalPath/TinyCore-current.iso"
+        loopback loop $isofile
+        linux (loop)/boot/vmlinuz
+        #linux (loop)/boot/vmlinuz quiet cde iso=/mnt/sd[x]X$isofile
+        #initrd (loop)/boot/tinycore.gz
+        initrd (loop)/boot/core.gz
+      }
+
+      menuentry "Damn Small Linux (DWY)" --class damnsmall --class os {
+        # set isofile="$minimalPath/dsl-4.4.10.iso"
+        set isofile="$minimalPath/dsl-4.4.10_debug.iso"
+        loopback loop "$isofile"
+
+        # Main Error: Can't find KNOPPIX filesystem, sorry.  Dropping you to a (very limited) shell.  Press reset button to quit.  Additional builtin commands available: cat mount umount insmod rmmod lsmod.  knoppix#
+        # Possibly innocuous error:
+        #   kmod: failed to exec /sbin/modprobe -s -k scsi_hostadapter, errno = 2
+        #   https://www.linuxquestions.org/questions/slackware-14/kmod-failed-to-exec-sbin-modprobe-s-k-scsi_hostadapter-errno-%3D-2-a-214941/
+        # Kernel panic: VFS: Unable to mount root fs on 03:02
+        # Kernel panic: Attempted to kill init!
+
+        # Using 'linux' seems to be the source of the kernel panic, and maybe the VFS mount root fs problem as well
+
+        # Maybe try this instead later: https://gist.github.com/oxplot/2041319 (broken now)
+        # linux16 /boot/bootdistro/damnsmall/isolinux/linux24 knoppix_dir=damnsmall ramdisk_size=100000 lang=en apm=power-off nomce noapic quiet BOOT_IMAGE=knoppix
+        # initrd16 /boot/bootdistro/damnsmall/isolinux/minirt24.gz
+
+        # linux16 (loop)/boot/isolinux/linux24 knoppix_dir=damnsmall ramdisk_size=100000 lang=en apm=power-off nomce noapic quiet BOOT_IMAGE=knoppix
+        # initrd16 (loop)/boot/isolinux/minirt24.gz
+
+        # linux16 (loop)/boot/isolinux/linux24 knoppix_dir=$isofile/KNOPPIX ramdisk_size=100000 lang=en apm=power-off nomce noapic quiet BOOT_IMAGE=knoppix
+        # initrd16 (loop)/boot/isolinux/minirt24.gz
+
+        # linux (loop)/boot/isolinux/linux bootfrom=/dev/sda2$isofile acpi=off keyboard=us language-us lang=us
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/sda2$isofile acpi=off keyboard=us language-us lang=us
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/sda2$isofile acpi=off keyboard=us language-us lang=us
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/sda1$isofile acpi=off keyboard=us language=us lang=us
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/sda2$isofile acpi=off keyboard=us lang=en
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/sda1$isofile acpi=off keyboard=us lang=en
+        # linux16 (loop)/boot/isolinux/linux24 bootfrom=/dev/sda1$isofile knoppix_dir=damnsmall ramdisk_size=100000 lang=en apm=power-off nomce noapic quiet BOOT_IMAGE=knoppix
+        # initrd (loop)/boot/isolinux/minirt24.gz
+
+        # linux16 (loop)/boot/isolinux/linux24 bootfrom=/dev/sda1$isofile knoppix_dir=$isofile/KNOPPIX ramdisk_size=100000 lang=en apm=power-off nomce noapic quiet BOOT_IMAGE=knoppix
+        # linux16 (loop)/boot/isolinux/linux24 bootfrom=/dev/sda1$isofile knoppix_dir=dsl-4.4.10.iso/KNOPPIX ramdisk_size=100000 lang=en apm=power-off nomce noapic quiet BOOT_IMAGE=knoppix
+
+        # linux16 (loop)/boot/isolinux/linux24 bootfrom=/dev/hda1$isofile knoppix_dir=damnsmall ramdisk_size=100000 lang=en apm=power-off nomce noapic quiet BOOT_IMAGE=knoppix
+
+        # linux16 (loop)/boot/isolinux/linux24 apm=power-off vga=794 nomce noscsi noideraid nosound nofirewire quiet xmodule=vesa loglevel=0 nolapic_timer noeject lang=us
+        # linux16 (loop)/boot/isolinux/linux24 bootfrom=/dev/hda1$isofile apm=power-off vga=794 nomce noscsi noideraid nosound nofirewire quiet xmodule=vesa loglevel=0 nolapic_timer noeject lang=us
+
+        # linux16 (loop)/boot/isolinux/linux24 bootfrom=/dev/sda1$isofile knoppix_dir=/dev/sda1$isofile/KNOPPIX ramdisk_size=100000 lang=en apm=power-off nomce noapic quiet BOOT_IMAGE=knoppix
+        # linux16 (loop)/boot/isolinux/linux24 bootfrom=/dev/sda1$isofile
+        # linux16 (loop)/boot/isolinux/linux24 bootfrom=/dev/sda1$isofile knoppix_dir=DSL KNOPPIX_DIR=DSL BOOT_IMAGE=knoppix
+        # linux16 (loop)/boot/isolinux/linux24 bootfrom=/dev/sda1$isofile knoppix_dir=KNOPPIX KNOPPIX_DIR=KNOPPIX BOOT_IMAGE=knoppix
+
+        # linux16 (loop)/boot/isolinux/linux24 root=/dev/sda1 ro lang=us toram noeject frugal
+        # linux (loop)/boot/isolinux/linux24 root=/dev/sda1 ro lang=us toram noeject frugal # Kernel panic: VFS: unable to mount root fs on 08:01
+        # linux16 (loop)/boot/isolinux/linux24 root=/dev/hda1 ro lang=us toram noeject frugal # Can't find KNOPPIX filesystem, sorry.  ...
+        # linux (loop)/boot/isolinux/linux24 root=/dev/hda1 ro lang=us toram noeject frugal # kernel panic. unable to open initial console.  no init found. init=
+        # linux (loop)/boot/isolinux/linux24 root=/dev/hda1 init=/etc/init ro lang=us toram noeject frugal
+        # linux (loop)/boot/isolinux/linux24 root=/dev/hda1 init=/bin/bash ro lang=us toram noeject frugal
+        # linux16 (loop)/boot/isolinux/linux24 root=/dev/hda1$iso ro lang=us toram noeject frugal # Can't find KNOPPIX filesystem, sorry.  ...
+        # linux16 (loop)/boot/isolinux/linux24 root=/dev/hda1$iso knoppix_dir=KNOPPIX KNOPPIX_DIR=KNOPPIX ro lang=us toram noeject frugal # Can't find KNOPPIX filesystem, sorry.  ...
+        # linux16 (loop)/boot/isolinux/linux24 root=/dev/hda1$iso knoppix_dir=KNOPPIX KNOPPIX_DIR=KNOPPIX knoppix_name=KNOPPIX ro lang=us toram noeject frugal # Can't find KNOPPIX filesystem, sorry.  ...
+
+        # initrd16 (loop)/boot/isolinux/minirt24.gz
+
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/hda1$isofile # #
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/hda1$isofile ramdisk_size=100000 init=/etc/init lang=us apm=power-off vga=791 nomce noapic quiet BOOT_IMAGE=knoppix # Can't find KNOPPIX filesystem, sorry.  ...
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/hda1$isofile ramdisk_size=100000 init=/etc/init lang=us apm=power-off vga=791 nomce noapic quiet BOOT_IMAGE=KNOPPIX # Can't find KNOPPIX filesystem, sorry.  ...
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/hda1$isofile ramdisk_size=100000 init=/etc/init lang=us apm=power-off vga=791 nomce noapic quiet knoppix_dir=KNOPPIX KNOPPIX_DIR=KNOPPIX # VFS: Mounted root.  Sy: Can't open Sy.  Kernel panic: Attempted to kill init!
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/hda1$isofile ramdisk_size=100000 init=/etc/init lang=us apm=power-off vga=791 nomce noapic quiet knoppix_dir=KNOPPIX KNOPPIX_DIR=KNOPPIX acpi=force # Can't find KNOPPIX filesystem, sorry.  ...
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/hda1$isofile root=/dev/hda1$isofile ramdisk_size=100000 init=/etc/init lang=us apm=power-off vga=791 nomce noapic quiet knoppix_dir=KNOPPIX KNOPPIX_DIR=KNOPPIX acpi=force # Can't find KNOPPIX filesystem, sorry.  ...
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/hda1$isofile ramdisk_size=100000 lang=us apm=power-off vga=normal nomce noapic quiet BOOT_IMAGE=knoppix knoppix_dir=KNOPPIX KNOPPIX_DIR=KNOPPIX # nomce: Can't open nomce.  Kernel panic: Attempted to kill init!
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/hda1$isofile ramdisk_size=100000 lang=us apm=power-off vga=normal noapic quiet BOOT_IMAGE=knoppix knoppix_dir=KNOPPIX KNOPPIX_DIR=KNOPPIX # #
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/hda1$isofile root=/dev/hda1$isofile ramdisk_size=100000 lang=us apm=power-off vga=normal noapic quiet BOOT_IMAGE=knoppix knoppix_dir=KNOPPIX KNOPPIX_DIR=KNOPPIX # #
+
+        # linux (loop)/boot/isolinux/linux24 ramdisk_size=100000 init=/etc/init apm=power-off vga=791 noapic BOOT_IMAGE=knoppix iso-scan/filename=$isofile nomodeset # Can't find KNOPPIX filesystem, sorry.  ...
+        # linux (loop)/boot/isolinux/linux24 ramdisk_size=100000 init=/etc/init apm=power-off vga=791 noapic BOOT_IMAGE=knoppix knoppix_dir=KNOPPIX KNOPPIX_DIR=KNOPPIX iso-scan/filename=$isofile nomodeset # Can't find KNOPPIX filesystem, sorry.  ...
+
+        # linux (loop)/boot/isolinux/linux24 isofrom=/dev/hda1$isofile ramdisk_size=100000 init=/etc/init lang=us apm=power-off vga=791 nomce noapic quiet BOOT_IMAGE=knoppix # Can't find KNOPPIX filesystem, sorry.  ...
+        # linux (loop)/boot/isolinux/linux24 isofrom=/dev/hda1$isofile ramdisk_size=100000 init=/etc/init lang=us apm=power-off vga=791 nomce noapic quiet BOOT_IMAGE=knoppix knoppix_dir=KNOPPIX KNOPPIX_DIR=KNOPPIX # Can't find KNOPPIX filesystem, sorry.  ...
+        # linux (loop)/boot/isolinux/linux24 isofrom=/dev/hda1$isofile ramdisk_size=100000 init=/etc/init lang=us apm=power-off vga=791 nomce noapic quiet BOOT_IMAGE=knoppix knoppix_dir=KNOPPIX KNOPPIX_DIR=KNOPPIX iso-scan/filename=$isofile # Guru meditation error
+
+        # linux (loop)/boot/isolinux/linux24 debug isofrom=/dev/hda1$isofile ramdisk_size=100000 init=/etc/init lang=us apm=power-off vga=791 nomce noapic BOOT_IMAGE=knoppix # Can't find KNOPPIX filesystem, sorry.  ...
+        # linux (loop)/boot/isolinux/linux24 debug isofrom=/dev/hda1$isofile ramdisk_size=100000 init=/etc/init lang=us apm=power-off vga=791 nomce noapic BOOT_IMAGE=knoppix knoppix_dir=KNOPPIX KNOPPIX_DIR=KNOPPIX # Can't find KNOPPIX filesystem, sorry.  ...
+        # linux16 (loop)/boot/isolinux/linux24 debug isofrom=/dev/hda1$isofile ramdisk_size=100000 init=/etc/init lang=us apm=power-off vga=791 nomce noapic BOOT_IMAGE=knoppix knoppix_dir=KNOPPIX KNOPPIX_DIR=KNOPPIX # Can't find KNOPPIX filesystem, sorry.  ...
+        # linux16 (loop)/boot/isolinux/linux24 debug isofrom=/dev/hda1$isofile ramdisk_size=100000 init=/etc/init lang=us apm=power-off vga=791 nomce noapic BOOT_IMAGE=knoppix knoppix_dir=knoppix KNOPPIX_DIR=knoppix # VFS...
+        # linux (loop)/boot/isolinux/linux24 debug isofrom=/dev/hda1$isofile ramdisk_size=100000 init=/etc/init lang=us apm=power-off vga=791 nomce noapic BOOT_IMAGE=knoppix knoppix_dir=knoppix KNOPPIX_DIR=knoppix # Guru ...
+
+        # linux (loop)/boot/isolinux/linux24 bootfrom=/dev/hda1$isofile acpi=off keyboard=us language-us
+        # linux (loop)/boot/isolinux/linux24 init=/etc/init bootfrom=/dev/hda1$isofile acpi=off keyboard=us language-us
+
+        echo linux (loop)/boot/isolinux/linux24 init=/etc/init bootfrom=/dev/hda1$isofile acpi=off keyboard=us language-us BOOT_IMAGE=expert
+        read
+        linux (loop)/boot/isolinux/linux24 init=/etc/init bootfrom=/dev/hda1$iso_path acpi=off keyboard=us language-us BOOT_IMAGE=expert
+
+        initrd (loop)/boot/isolinux/minirt24.gz
+      }
+
+      # TODO: Mini Ubuntu # Ubuntu/Debian-based
+      # BunsenLabs Linux
+    }
+
+    submenu 'Admin/Recovery...' --class recovery --class linux --class os {
+      set arPath="$linuxPath/Admin-Recovery"
+      export arPath
+
+      submenu "Finnix (Untested)..." --class finnix --class recovery --class os {
+        menuentry "Boot Finnix 109 (64-bit) (Untested)" {
+          set isofile="$arPath/finnix-111.iso"
+          loopback loop $isofile
+          linux (loop)/boot/x86/linux64 findiso=$isofile vga=791 nomodeset quiet --
+          initrd (loop)/boot/x86/initrd.xz
+        }
+
+        menuentry "Boot Finnix 109 (64-bit, text mode) (Untested)" {
+          set isofile="$arPath/finnix-111.iso"
+          loopback loop $isofile
+          linux /boot/x86/linux64 findiso=$isofile vga=normal nomodeset quiet --
+          initrd /boot/x86/initrd.xz
+        }
+      }
+
+      submenu "GRML (Untested)..." --class grml --class recovery --class os {
+        menuentry "GRML - the sysadmins best friend" {
+          set isofile="$arPath/grml96-full_2014.11.iso"
+          loopback loop "$isofile"
+          set root=(loop)
+          configfile /boot/grub/loopback.cfg
+        }
+
+        # https://github.com/grml/grml-live/blob/3ac646b41e6ce3aa58ff914bf2ba5d52d157d125/templates/boot/grub/%25SHORT_NAME%25_default.cfg
+        menuentry "grml64-full - copy Grml to RAM" {
+          set isofile="$arPath/grml96-full_2014.11.iso"
+          loopback loop "$isofile"
+          set root=(loop)
+          set gfxpayload=keep
+          echo 'Loading kernel...'
+          linux  (loop)/boot/grml64full/vmlinuz apm=power-off boot=live   nomce net.ifnames=0  "${loopback}" "${kernelopts}" toram=grml64-full.squashfs live-media-path="(loop)/live/grml64-full/" bootid=0fdfb62c-40af-40b9-9387-014232eb1f74
+          echo 'Loading initrd...'
+          initrd (loop)/boot/grml64full/initrd.img
+        }
+      }
+
+      # SystemRescue # Arch-based
+    }
+
+    submenu 'Pentesting...' --class pentest --class linux --class os {
+      set penPath="$linuxPath/Pentesting"
+      export penPath
+
+      menuentry "kali-linux-1.1.0a-amd64 (Untested)" --class kali --class pentest --class os {
+        set isofile="$penPath/kali-linux-1.1.0a-amd64.iso"
+        loopback loop $isofile
+        linux (loop)/live/vmlinuz boot=live findiso=$isofile noconfig=sudo username=root hostname=kali
+        initrd (loop)/live/initrd.img
+      }
+
+      # Parrot OS
+
+      # Use Kali instead.
+      menuentry "BackTrack 5 (Obsolete)" --class backtrack --class kali --class pentest --class os {
+        loopback loop "$penPath/BT5-GNOME-64.iso"
+        linux (loop)/casper/vmlinuz boot=casper iso-scan/filename=/BT5-GNOME-64.iso noeject noprompt splash --
+        initrd (loop)/casper/initrd.lz
+      }
+    }
+
+    submenu 'Anonymous/Privacy/Ephemeral...' --class privacy --class linux --class os {
+      set privPath="$linuxPath/Privacy"
+      export privPath
+
+      menuentry "TAILS - The Amnesic Incognito Live System (Untested)" --class tails --class privacy --class os {
+        set isofile="$privPath/tails-i386-0.17.2.iso"
+        loopback loop $isofile
+        linux (loop)/live/vmlinuz boot=live config live-media=removable nopersistent noprompt quiet timezone=America/New_York block.events_dfl_poll_msecs=1000 splash nox11autologin module=Tails findiso=$isofile quiet_
+        initrd (loop)/live/initrd.img
+      }
+
+      # Debian-based
+      menuentry "Knoppix (DWY)" --class knoppix --class privacy --class os {
+        set isofile="$arPath/knoppix.iso"
+      }
+    }
+
+    submenu 'Other/More Specific/Focused' --class special --class linux --class os {
+      set specialPath="$linuxPath/Special"
+      export specialPath
+
+      submenu 'LibreELEC...' --class libreelec --class special --class os {
+        menuentry "LibreELEC Live (Other Partition Root) ()" --class libreelec {
+          probe --set libreelecuuid --fs-uuid hd0,msdos2
+          export libreelecuuid
+          set root=(hd0,msdos2)
+          linux /KERNEL boot=UUID=${libreelecuuid} live quiet
+        }
+
+        menuentry "LibreELEC Installer (Other Partition Root) ()" --class libreelec {
+          probe --set libreelecuuid --fs-uuid hd0,msdos2
+          export libreelecuuid
+          set root=(hd0,msdos2)
+          linux /KERNEL boot=UUID=${libreelecuuid} installer quiet
+        }
+
+        menuentry "LibreELEC Live (Subdir) (Broken)" --class libreelec {
+          linux "$fsPath/LibreELEC/KERNEL" boot=UUID=${rootuuid} live quiet
+        }
+
+        menuentry "LibreELEC Installer (Subdir) (Broken)" --class libreelec {
+          linux "$fsPath/LibreELEC/KERNEL" boot=UUID=${rootuuid} installer quiet
+        }
+      }
+
+      submenu 'TrueNAS... (DWY)' --class truenas --class special --class os {
+        # Error: Not a bootable disk, even with partition boot flag set..
+        menuentry 'TrueNAS/FreeNAS Core 12.0-U8.1 ISO chain (DWY)' --class truenas --class special --class os {
+          set isoFile="$specialPath/TrueNAS-12.0-U8.1.iso"
+          loopback loop "$isofile"
+          # linux (loop)/isolinux/vmlinuz root=live:CDLABEL=Fedora-WS-Live-32-1-6 iso-scan/filename="$isofile" rd.live.image quiet
+          # initrd (loop)/isolinux/initrd.img
+
+          # chainload (loop)/boot/loader
+          chainloader +1
+          boot
+        }
+
+        # Error: Freeze/hang, even without chainload/boot commands
+        menuentry 'TrueNAS/FreeNAS Core 12.0-U8.1 ISO kfreebsd (DWY)' --class truenas --class special --class os {
+          insmod part_gpt
+          insmod zfs
+          insmod bsd
+          nativedisk
+
+          search --no-floppy --set -l boot-pool
+          kfreebsd /ROOT/default/@/boot/kernel/kernel
+
+          kfreebsd_module_elf /ROOT/default/@/boot/kernel/if_qlxgbe.ko
+          kfreebsd_module_elf /ROOT/default/@/boot/kernel/ipmi.ko
+          kfreebsd_module_elf /ROOT/default/@/boot/kernel/smbus.ko
+          kfreebsd_module_elf /ROOT/default/@/boot/modules/openzfs.ko
+          kfreebsd_module_elf /ROOT/default/@/boot/kernel/smartpqi.ko
+          kfreebsd_module_elf /ROOT/default/@/boot/kernel/ocs_fc.ko
+          kfreebsd_module_elf /ROOT/default/@/boot/kernel/if_bnxt.ko
+          kfreebsd_module_elf /ROOT/default/@/boot/kernel/ispfw.ko
+
+          set kFreeBSD.vfs.root.mountfrom=zfs:boot-pool/ROOT/default
+
+          chainloader +1
+          boot
+        }
+
+        # Error: invalid magic number
+        menuentry 'TrueNAS/FreeNAS Core 12.0-U8.1 Part Kernel (DWY)' --class truenas --class special --class os {
+          probe --set truenasuuid --fs-uuid hd0,msdos4
+          export truenasuuid
+          set root=(hd0,msdos4)
+          linux /boot/kernel/kernel boot=UUID=${truenasuuid} live quiet
+        }
+
+        # Error: Invalid partition table
+        menuentry 'TrueNAS/FreeNAS Core 12.0-U8.1 Part Raw (DWY)' --class truenas --class special --class os {
+          probe --set truenasuuid --fs-uuid hd0,msdos4
+          export truenasuuid
+          set root=(hd0,msdos4)
+
+          chainloader +1
+          boot
+        }
+
+        # Direct EFI boot to partition's specific file:
+        # error cannot open boot lua loader lua no such file
+      }
+
+      # OwnCloud  # Installs on existing OS
+      # SteamOS   # A UEFI package
+      # AV Linux
+
+      ## Minecraft
+      # TODO: MineCRUX
+    }
+  }
+
+  submenu "Windows/DOS..." --class windows --class desktop --class os {
+    set winDOSPath="$isoPath/Win-DOS"
+    export winDOSPath
+
+    menuentry "Win10 21H2 Chainload (Untested)" --class win10 --class windows --class os {
+      loopback loop "$isoPath/Win10_21H2_English_x64.iso"
+      chainloader (loop)
+    }
+
+    menuentry "win7 Chainload (Untested)" --class win7 --class windows --class os {
+      loopback loop "$isoPath/win7.iso"
+      chainloader (loop)
+    }
+
+    menuentry "Microsoft Windows x86_64 UEFI-GPT Setup (Doesn't work)" --class win7 --class windows --class os {
+      insmod usbms
+      insmod part_gpt
+      insmod part_msdos
+      insmod fat
+      insmod search_fs_uuid
+      insmod chain
+      search --fs-uuid --no-floppy --set=root 01D0DC21970FC910
+      #chainloader (${root})/efi/Microsoft/Boot/bootmgfw.efi
+      chainloader (${root})/efi/Microsoft/Boot/cdboot_noprompt.efi
+    }
+
+    submenu "Windows PE..." --class winpe --class windows --class os {
+      menuentry "WinPE 1a" --class winpe --class windows --class os {
+        set root=(hd0,msdos5)
+        boot
+      }
+
+      menuentry "WinPE 1b" --class winpe --class windows --class os {
+        set root=(hd0,msdos5)
+        chainloader +1
+      }
+
+      menuentry "WinPE 2" --class winpe --class windows --class os {
+        rootnoverify (hd0,msdos5)
+        chainloader +1
+      }
+    }
+
+    submenu "MS-DOS..." --class msdos --class windows --class os {
+      menuentry "MS-DOS" --class msdos --class windows --class os {
+        set isofile="$winDOSPath/DOS6.22_bootdisk.iso"
+        set gfxpayload=text
+        linux16 "$memdiskPath" raw
+        initrd16 "$isofile"
+      }
+      menuentry "MS-DOS 2" --class msdos --class windows --class os {
+        set isofile="$winDOSPath/DOS6.22_bootdisk.iso"
+        linux16  "$memdiskPath" bigraw
+        initrd16 "$isofile"
+      }
+    }
+
+    menuentry "Grub4dos (Untested)" --class grub4dos --class windows --class os {
+     linux "$grub4dosPath"
+    }
+
+    menuentry "Free Dos from iso using memdisk 4.05 (Untested)" --class freedos --class windows --class os {
+      set isofile="/OS/fdbasecd.iso"
+      linux16 $memdiskPath iso
+      initrd16 (hd0,6)$isofile
+    }
+  }
+
+  # Mac(intosh/(i)OS)?....
+}
+
+submenu "Utils..." --class tools {
+  # I keep this around for some reason.  Something about a major version difference.  Compatibility maybe? MBR?
+  set oldMemtestISOPath="$memdiskPath/Memtest86-4.3.7.iso"
+  set memtestISOPath="$memdiskPath/Memtest86-7.3.iso"
+  export oldMemtestISOPath
+  export memtestISOPath
+
+  menuentry "Memtest 86+" --class memtest --class tools {
+    set isofile="$memtestISOPath"
+    loopback loop "$isofile"
+    linux16 (loop)/isolinux/memtest iso-scan/filename="$isofile"
+  }
+
+  submenu "SpinRite..." --class spinrite --class tools {
+    menuentry "SpinRite 6.0 (raw)" {
+      set isofile="$toolPath/SpinRite 6.0/SpinRite.img"
+      set gfxpayload=text
+      linux16 "$memdiskPath" raw
+      initrd16 "$isofile"
+    }
+
+    # Source: http://codeverge.com/grc.techtalk.linux/grub-booting-spinrite-image-got-it-working/1617093
+    menuentry "SpinRite 6.0 (bigraw)" {
+      set isofile="$toolPath/SpinRite 6.0/SpinRite.img"
+      set gfxpayload=text
+      linux16  "$memdiskPath" bigraw
+      initrd16 "$isofile"
+    }
+  }
+
+  # If I want direct access to TestDisk/PhotoRec, maybe look into bundling FreeDOS to run them: http://www.cgsecurity.org/wiki/Create_a_TestDisk_FreeDos_LiveCD
+  # Or just use Finnix / Fedora*Live / Other Rescues
+
+  # Source: https://help.ubuntu.com/community/Grub2/ISOBoot/Examples#Gparted
+  menuentry 'GParted 64-bit ISO' --class gparted --class tools {
+    #set gfxpayload=text # ~= vga='normal'
+    # isofile_abspath is relative to LiveUSB root.
+    set isofile_abspath="$toolPath/gparted-live-0.28.1-1-amd64.iso"
+    # isofile_devpath is relative to (and begins with) '/dev'
+    set isofile_devpath="${devroot}${isofile_abspath}"
+    # "mount" the ISO
+    loopback loop "(${root})${isofile_abspath}"
+    # Following (single!) line adapted from https://wiki.archlinux.org/index.php/Multiboot_USB_drive#GParted_Live
+    linux '(loop)/live/vmlinuz' boot='live' union='overlay' username='user' config components noswap noeject toram='filesystem.squashfs' ip='' nosplash findiso="${isofile_abspath}"
+    # start RAMdisk from device=loop
+    initrd '(loop)/live/initrd.img'
+  }
+
+  menuentry "Parted Magic (Untested)" --class partedmagic --class tools {
+    set isofile="$toolPath/pmagic.iso"
+    loopback loop $isofile
+    linux (loop)/pmagic/bzImage iso_filename=$isofile edd=off load_ramdisk=1 prompt_ramdisk=0 rw gfxpayload=800x600x16 loglevel=9 max_loop=256 vmalloc=384MiB keymap=dvorak
+    initrd (loop)/pmagic/initrd.img
+  }
+
+  menuentry "SystemRescueCd" --class systemrescue --class tools {
+    set isofile="$toolPath/systemrescuecd-x86-4.5.3.iso"
+    loopback loop "$isofile"
+    # linux (loop)/isolinux/rescuecd isoloop"=$isofile" setkmap=us docache dostartx
+    # Or linux (loop)/isolinux/rescue32
+    # Or linux (loop)/isolinux/rescue64
+    linux (loop)/isolinux/rescue64 isoloop="$isofile" setkmap=us docache dostartx
+    initrd (loop)/isolinux/initram.igz
+  }
+
+  menuentry "CloneZilla" --class clonezilla --class tools {
+    set isofile="$toolPath/clonezilla-live-2.5.0-25-amd64.iso"
+    loopback loop "$isofile"
+    # linux (loop)/live/vmlinuz boot=live live-config union=aufs nolocales noprompt gfxpayload=800x600x16 ip=frommedia findiso="$isofile"
+    # initrd (loop)/live/initrd.img
+
+    # linux (loop)/live/vmlinuz initrd=/live/initrd.img boot=live union=overlay username=user config components quiet noswap edd=on nomodeset locales= keyboard-layouts= ocs_live_run="ocs-live-general" ocs_live_extra_param="" ocs_live_batch="no" vga=788 ip= net.ifnames=0  nosplash i915.blacklist=yes radeonhd.blacklist=yes nouveau.blacklist=yes vmwgfx.enable_fbdev=1
+
+    linux (loop)/live/vmlinuz
+    initrd /live/initrd.img boot=live union=overlay username=user config components quiet noswap edd=on nomodeset locales= keyboard-layouts= ocs_live_run="ocs-live-general" ocs_live_extra_param="" ocs_live_batch="no" vga=788 ip= net.ifnames=0  nosplash i915.blacklist=yes radeonhd.blacklist=yes nouveau.blacklist=yes vmwgfx.enable_fbdev=1
+  }
+
+  # Source: https://askubuntu.com/a/880484
+  menuentry "Clonezilla 2" --class clonezilla --class tools {
+    set isofile="$toolPath/clonezilla-live-2.5.0-25-amd64.iso"
+    loopback loop "$isofile"
+    linux (loop)/live/vmlinuz boot=live components config findiso=$isofile ip=frommedia toram=filesystem.squashfs union=overlay username=user
+    initrd (loop)/live/initrd.img
+  }
+
+  menuentry "DBAN ISO (Untested)" --class dban --class tools {
+   set isofile="$toolPath/dban.iso"
+   loopback loop $isofile
+   linux (loop)/DBAN.BZI nuke="dwipe" iso-scan/filename=$isofile silent --
+  }
+
+  menuentry "PC-Doctor (Untested)" --class pcdoctor --class tools {
+    loopback loop /boot/iso/pcdd1780.iso
+    linux (loop)/[BOOT]/Bootable_2.88M.img
+  }
+
+  menuentry "Hardware Detection Tool from iso using memdisk 4.05 (Untested)" --class hdt --class memtest --class tools {
+    linux16 $memdiskPath iso
+    initrd16 /customboot/hdt.iso
+  }
+
+  submenu "Ultimate Boot CDs..." --class systemrescue --class tools {
+    # Source: dann.com.br...
+    menuentry "Hiren's boot CD using grub.exe" --class ubcd --class systemrescue --class grub4dos --class tools {
+      set hbcdPath="$toolPath/HBCD"
+      set menuLstPath="$hbcdPath/menu.lst"
+      set isofile="$toolPath/Hiren's.BootCD.15.2.iso"
+      linux16 "$dosGRUBPath" --config-file="find --set-root $menuLstPath configfile $menuLstPath"
+    }
+    menuentry "Hiren's boot CD using memdisk 4.05" --class ubcd --class systemrescue --class memdisk --class tools {
+      set isofile="$toolPath/Hiren's.BootCD.15.2.iso"
+      linux16 $memdiskPath iso
+      initrd16 (hd0,6)$isofile
+    }
+    menuentry "Ultimate Boot CD iso using memdisk 4.05" --class ubcd --class systemrescue --class memdisk --class tools {
+      set isofile="$toolPath/UBCD4WinBuilder.iso"
+      linux16 $memdiskPath iso
+      initrd16 (hd0,6)$isofile
+    }
+    menuentry "UBCD with MEMDISK (Untested)" --class ubcd --class systemrescue --class memdisk --class tools {
+      set isofile="$toolPath/ubcd502.iso"
+      linux16 $memdiskPath iso raw
+      initrd $isofile
+    }
+    menuentry "UBCD with grub4dos (Untested)" --class ubcd --class systemrescue --class grub4dos --class tools {
+      set isofile="$toolPath/ubcd502.iso"
+      linux16 "$grub4dosPath" --config-file="map (rd) (hd32) map --hook root (hd32) chainloader (hd32)"
+      initrd $isofile
+    }
+  }
+
+  menuentry "Ophcrack" --class ophcrack --class tools {
+    menuentry "Ophcrack No Tables (Untested)" {
+      set isofile="$toolPath/ophcrack-notables.iso"
+      set gfxpayload=text
+      loopback loop $isofile
+      linux (loop)/boot/bzImage root=/dev/null rw lang=en_US kmap=dvorak autologin iso-scan/filename=$isofile
+      initrd (loop)/boot/rootfs.gz
+    }
+
+    menuentry "Ophcrack Vista/7 Tables (Untested)" {
+      set isofile="$toolPath/ophcrack-vistatables.iso"
+      set gfxpayload=text
+      loopback loop $isofile
+      linux (loop)/boot/bzImage root=/dev/null rw lang=en_US kmap=dvorak autologin iso-scan/filename=$isofile
+      initrd (loop)/boot/rootfs.gz
+    }
+  }
+}
+
+# Source: https://github.com/thias/glim/blob/master/grub2/grub.cfg
+menuentry '--------------------------------' { # Empty line
+  true
+}
+
+# TODO: fix bug: Causes later comments to not be ignored properly.. for loop line??
+  # menuentry "Scan for OS on internal HDD (Untested)" --class scanhdd --class os {
+  #   insmod regexp
+  #   insmod ahci
+  #   insmod part_msdos
+  #   for x in (ahci0,*)  do
+  #     if [ -f "$x/grub/grub.cfg" ]  then
+  #       menuentry "Load Config from $x" $x --class scanhdd --class os {
+  #         root=$2
+  #         configfile /grub/grub.cfg
+  #       }
+  #     fi
+  #     if [ -f "$x/boot/grub/grub.cfg" ]  then
+  #       menuentry "Load Config from $x" $x --class scanhdd --class os {
+  #         root=$2
+  #         configfile /boot/grub/grub.cfg
+  #       }
+  #     fi
+  #   done
+  # }
+
+# Source: https://github.com/thias/glim/blob/master/grub2/grub.cfg
+menuentry '--------------------------------' { # Empty line
+  true
+}
+
+menuentry 'System setup (DWY)' --class setup {
+  fwsetup
+}
+
+menuentry "System shutdown" --class shutdown {
+  echo "System shutting down..."
+  halt
+}
+
+menuentry "System restart" --class restart {
+  echo "System rebooting..."
+  reboot
+}
