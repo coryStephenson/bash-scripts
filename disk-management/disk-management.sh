@@ -19,5 +19,10 @@ Tasks:\n
 10) Display disk's used space info\n
 *******************************************************************************************************************\n\n"
 
+#5) Erase disk by overwriting a disk with zeros
+sudo dd if=/dev/zero of=/dev/sdX bs=1M status=progress
+
+#5) Erase disk securely
+sudo dd if=/dev/urandom of=/dev/sdX bs=4M status=progress
 
 
