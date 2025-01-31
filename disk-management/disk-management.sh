@@ -34,5 +34,5 @@ backup_dir="/path/to/backup"
 
 # Perform full backup
 echo "Performing Full Backup..."
-rsync -avz --delete "$source_dir/" "$backup_dir/"
-echo "Full Backup completed!"
+nice -n19 ionice -c3 rsync -aAXv --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found"} "$source_dir/" "$backup_dir/" --info=progress2
+echo "Full Backup completed!" 
