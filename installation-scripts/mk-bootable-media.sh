@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
-set -o errtrace
+
 
 catch() {
   exit_code="${1}"
@@ -482,7 +481,7 @@ do
 						echo -e "\nIt may just be a partial download. To be on the safe side, I'll delete it.\n"
                         echo -e "\nRemoving files that start with ${ISO_NAME}...\n"
                         rm -rf "${ISO_NAME}"*
-						trap 'catch '${exit_code}' '${LINENO}'' ERR INT TERM EXIT
+						trap 'catch '${exit_code}' '${LINENO}'' ERR INT TERM
 						echo -e "\n\nStarting download via axel..."
 						axel -o "${DESTINATION}"/"${ISO_NAME}" "${ISO_URL}"
 						echo -e "\n\nExit status (0 means success; 1 means error): $?"
