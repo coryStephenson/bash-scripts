@@ -7,7 +7,7 @@ This repository contains all of the bash scripts I have written in order to simp
 If at any time you find that you are unable to execute any of the scripts herein, please run 
 
 ```bash
-sudo chmod 755 <script-name>
+sudo chmod 700 <script-name>
 ```
 or
 ```bash
