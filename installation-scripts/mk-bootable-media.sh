@@ -384,15 +384,22 @@ verifychecksum() {
 datadump() {
 
 # Use lsblk to list block devices and filter by the "disk" type
-# We assume that the thumb drive will be detected as a "disk" type.
-thumb_drive_path=$(lsblk -o NAME,TYPE | awk '$2=="disk"{print "/dev/"$1}' | grep '/dev/sdb')
+# We assume that the bootable media partition will be detected as a "disk" type.
+
+# Read user input for bootable media partition
+echo "Which partition will serve as bootable media partition? (Please enter absolute path) "
+
+# The -r option stipulates that backslash does not act as an escape character
+read -r PARTITION
+
+BLK_DEV=$(lsblk -o name -lpn | grep "${PARTITION}")
 
 # Display the detected thumb drive path
-echo "Thumb Drive Path: ${thumb_drive_path}"
+echo -e "\nBootable media partition: ${BLK_DEV}\n\n"
 
 # Check if the drive already contains files or bootable images
 
-    if [[ -z $(ls -A "${thumb_drive_path}") ]]; then
+    if [[ -z $(ls -A "${BLK_DEV}") ]]; then
         echo "The drive is empty."
     else
         echo "The drive contains files or bootable images. Proceeding may result in data loss."
@@ -412,7 +419,7 @@ echo "Creating bootable thumb drive with ${iso_file_path}..."
 
 # Make sure to double-check the thumb_drive_path variable to ensure it points to the correct thumb drive.
 # Use the bs=4K option for an optimal block size (as mentioned in the previous response).
-dd if="${iso_file_path}" of="${thumb_drive_path}" bs=4096 conv=fdatasync status=progress
+dd if="${iso_file_path}" of="${BLK_DEV}" bs=4M conv=fdatasync status=progress
 
 mainmenu
 
@@ -462,9 +469,23 @@ do
 
 					         read -r ISO_URL
 
-					    echo -e "\n\nDesired filename for .iso download? "
+					    echo -e "\n\nDetecting name of .iso file..."
+                             sleep 2
+					         ISO_NAME=$(basename "$ISO_URL")
+                             echo "Filename detected: $ISO_NAME"
 
-					         read -r ISO_NAME
+                             read -p "Is the detected filename correct? " choice
+
+                                if [[ $choice = "no" ]]; then
+
+                                     echo -e "\n\nDesired .iso filename? "
+
+					                              read -r ISO_NAME
+                                fi
+
+
+
+
 
 
 		                      # 4) Test image variable non-existence && download using wget inside while loop
