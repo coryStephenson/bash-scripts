@@ -453,24 +453,27 @@ do
 		                       # 2) Test directory variable non-existence && mkdir ~/iso-files
 
 				            if [[ ! -d "${DESTINATION}" ]]; then
-
-						    echo -e "\n\n${DESTINATION} not found. Making directory ${DESTINATION}..."
+                                    sleep 3
+						            echo -e "\n\n${DESTINATION} not found. Making directory ${DESTINATION}..."
 			                            mkdir "${DESTINATION}"
 
 					       else
-
-						echo -e "\n\n${DESTINATION} already exists. The file will be placed in ${DESTINATION}."
+                                    sleep 3
+						            echo -e "\n\n${DESTINATION} already exists. The file will be placed in ${DESTINATION}."
 
 					       fi
 
 		                       # 3) Read user input for .iso image URL variable ISO
 
-		                            echo -e "\n\nDesired .iso download URL? "
+		                            sleep 3
+									echo -e "\n\nDesired .iso download URL? "
 
-					         read -r ISO_URL
+					                read -r ISO_URL
+                                    sleep 2
+					                    echo -e "\n\nDetecting name of .iso file..."
+                                    sleep 2
 
-					    echo -e "\n\nDetecting name of .iso file..."
-                             sleep 2
+									
 					         ISO_NAME=$(basename "$ISO_URL")
                              echo "Filename detected: $ISO_NAME"
 
