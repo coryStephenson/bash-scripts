@@ -13,6 +13,15 @@
 # List all locally installed binaries via apt
 # apt list --installed
 
+: << 'Set up Flatpak on Kubuntu'
+https://flatpak.org/setup/Kubuntu
+1) Install Flatpak - To install Flatpak on Kubuntu, open Discover, go to Settings, install the Flatpak backend and restart Discover.
+2) Install the Flatpak system settings add-on - To integrate Flatpak support into the Plasma System Settings, open the Terminal app and run:
+sudo apt install kde-config-flatpak
+3) Add the Flathub repository - Flathub is the best place to get Flatpak apps. To enable it, open Discover, go to Settings and add the Flathub repository.
+4) Restart - To complete setup, restart your system. Now all you have to do is install apps!
+Set up Flatpak on Kubuntu
+
 : << 'Installing snap on Debian'
 apt update
 apt install snap     # Installs the snap daemon
