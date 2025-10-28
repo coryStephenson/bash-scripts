@@ -81,3 +81,11 @@ mkdir -p .config/wezterm
 touch .config/wezterm/wezterm.lua
 cd .config/wezterm
 kate wezterm.lua
+
+# Installing Neovim via pre-built binary, according to https://github.com/neovim/neovim/blob/master/INSTALL.md
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+sudo rm -rf /opt/nvim-linux-x86_64
+sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+
+# Then add this to your shell config (~/.bashrc, ~/.zshrc, ...):
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
