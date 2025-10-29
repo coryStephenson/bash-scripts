@@ -145,3 +145,6 @@ sudo sed -i.bak 's|http://archive.ubuntu.com/ubuntu|http://mirrors.kernel.org/ub
 sudo sed -i 's|http://us.archive.ubuntu.com/ubuntu|http://mirrors.kernel.org/ubuntu|g' /etc/apt/sources.list
 sudo apt update
 sudo apt upgrade
+
+# Install LLVM's linker and a C/C++/Objective-C compiler that's part of the LLVM project
+apt install lld clang
