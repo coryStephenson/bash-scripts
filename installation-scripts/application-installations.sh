@@ -98,3 +98,43 @@ sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
 
 # Then add this to your shell config (~/.bashrc, ~/.zshrc, ...):
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+
+: << 'rust-analyzer setup for neovim'
+which rustup
+mkdir -p ~/.local/bin
+curl -L https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-x86_64-unknown-linux-gnu.gz | gunzip -c - > ~/.local/bin/rust-analyzer
+chmod 700 ~/.local/bin/rust-analyzer
+export PATH="$PATH:/home/cory/.local/bin"
+source ~/.bashrc
+rustup update
+rustup component add rust-analyzer rust-analysis rust-src
+/opt/nvim-linux-x86_64/bin/nvim ~/.config/nvim/init.lua
+
+{
+  'mrcjkb/rustaceanvim',
+  version = '^6', -- Recommended
+  lazy = false, -- This plugin is already lazy
+}
+
+mkdir -p ~/.config/nvim/after/ftplugin
+/opt/nvim-linux-x86_64/bin/nvim ~/.config/nvim/after/ftplugin/rust.lua
+
+local bufnr = vim.api.nvim_get_current_buf()
+vim.keymap.set(
+  "n", 
+  "<leader>a", 
+  function()
+    vim.cmd.RustLsp('codeAction') -- supports rust-analyzer's grouping
+    -- or vim.lsp.buf.codeAction() if you don't want grouping.
+  end,
+  { silent = true, buffer = bufnr }
+)
+vim.keymap.set(
+  "n", 
+  "K",  -- Override Neovim's built-in hover keymap with rustaceanvim's hover actions
+  function()
+    vim.cmd.RustLsp({'hover', 'actions'})
+  end,
+  { silent = true, buffer = bufnr }
+)
+rust-analyzer setup for neovim
