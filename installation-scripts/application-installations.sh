@@ -138,3 +138,10 @@ vim.keymap.set(
   { silent = true, buffer = bufnr }
 )
 rust-analyzer setup for neovim
+
+
+# If you experience trouble updating or upgrading your Ubuntu-based system (Manually switch to kernel.org mirror)
+sudo sed -i.bak 's|http://archive.ubuntu.com/ubuntu|http://mirrors.kernel.org/ubuntu|g' /etc/apt/sources.list
+sudo sed -i 's|http://us.archive.ubuntu.com/ubuntu|http://mirrors.kernel.org/ubuntu|g' /etc/apt/sources.list
+sudo apt update
+sudo apt upgrade
