@@ -148,3 +148,9 @@ sudo apt upgrade
 
 # Install LLVM's linker and a C/C++/Objective-C compiler that's part of the LLVM project
 apt install lld clang
+
+# Installing Pied (https://pied.mikeasoft.com/)
+# espeak-ng is a dependency
+sudo apt install espeak-ng
+wget https://github.com/Elleo/pied/releases/download/v0.3.1/com.mikeasoft.pied.flatpak
+flatpak install com.mikeasoft.pied.flatpak
