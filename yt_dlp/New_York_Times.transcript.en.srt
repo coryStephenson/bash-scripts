@@ -1,0 +1,792 @@
+You are unique.
+
+Your eyes cast a
+warm, brown glow.
+
+Your voice carries
+a soft tone.
+
+Your nose creases
+when you smile.
+
+But the things that
+make you unique
+
+can also be used to track you.
+
+And in China,
+your appearance,
+
+the technology you use,
+
+and the sound of your voice
+
+are all types of information
+
+the Chinese government
+collects.
+
+The scale of this surveillance
+
+and the infrastructure
+supporting it
+
+are larger and
+more elaborate
+
+than previously known.
+
+For over a year,
+
+The New York Times
+has analyzed
+
+more than 100,000
+government bidding documents.
+
+They span two decades
+
+and were collected and shared
+exclusively with us
+
+by ChinaFile, a digital magazine
+published by the Asia Society.
+
+In these bidding documents,
+government agencies
+
+from across the country detail
+what surveillance products
+
+and services they need,
+
+from phone trackers,
+
+to equipment used
+to collect iris scans,
+
+and DNA samples.
+
+These documents explain
+the strategic thinking
+
+behind the purchases
+
+and invite companies to bid
+for project contracts.
+
+Together, they reveal
+China’s ambition
+
+in collecting vast amounts
+of sensitive personal data.
+
+From the local
+to national level,
+
+China aims to gather as much
+information as possible
+
+on its citizens,
+
+centralize this data,
+
+and use it to maintain
+authoritarian rule
+
+over its entire population.
+
+Let’s start with the cameras,
+
+the foundation of China’s
+surveillance state.
+
+There’s a lot of them.
+
+Analysts estimate that over
+half of the world’s nearly
+
+one billion surveillance
+cameras are in China.
+
+These cameras
+surveil and store
+
+the images of all who
+cross their paths.
+
+A bidding document
+from Fujian Province,
+
+in the country’s southeast,
+
+details the police’s plan
+
+to improve their
+facial analysis system.
+
+It reveals just
+how much data
+
+their facial recognition
+cameras are capturing,
+
+so much so that they required
+a database 20 times as large.
+
+In this case,
+
+the system detects faces
+from video feeds
+
+and stores 2,000 images
+of those faces every day.
+
+Police keep them
+for six months.
+
+There are 7,000 video feeds
+in this Fujian system.
+
+So that’s 2.5 billion
+facial images
+
+stored at any given time.
+
+All those images are for
+just one province in China.
+
+To put that in context,
+
+that’s three times bigger
+than one of the largest
+
+U.S. government
+facial-recognition databases,
+
+which is run by
+Homeland Security.
+
+Throughout China,
+
+authorities are
+highly strategic
+
+about where they
+place cameras.
+
+Dozens of documents
+show that
+
+police detail the locations
+
+and precise viewing angles
+for the cameras.
+
+For example,
+
+there are instructions for
+a camera’s placement
+
+on the northwest side
+of this apartment building
+
+in Beijing,
+
+and across the street
+from this kindergarten
+
+in the city of Jiaxing.
+
+Police don’t just watch
+from the outside either.
+
+They want to put cameras
+inside the lobbies
+
+of these hotels,
+
+including at this
+franchise location
+
+of American hotel brand
+Days Inn.
+
+The hotel’s front desk manager
+told The Times
+
+that the camera does not have
+facial-recognition capabilities
+
+and is not feeding videos
+into the police network.
+
+One document from the town of
+Xiqiao in Guangdong Province
+
+reveals the philosophy
+of local officials
+
+as they aim for
+maximum surveillance.
+
+They’ve determined that
+cameras should go in places
+
+where people fulfill their
+most common needs.
+
+The document lists coordinates
+for camera positions.
+
+They match locations
+where people shop,
+
+where they live,
+
+where they learn
+
+and travel.
+
+To take advantage
+of all this footage,
+
+police around China
+rely on software
+
+to analyze and extract
+more information.
+
+State media promotes
+the software’s ability
+
+to identify a person’s
+race and ethnicity,
+
+the color of their clothes,
+
+and whether they’re wearing
+a mask or glasses.
+
+Documents show this technology
+can search a person’s image
+
+in existing databases
+for a match.
+
+These search results
+often contain
+
+more specific information
+about the person,
+
+like their national
+ID number, name, sex
+
+and permanent address.
+
+While this type of technology
+is readily available,
+
+the documents show
+the government
+
+doesn’t think it’s being
+used widely enough.
+
+In one, China’s top police
+agency complains that
+
+the analytical capabilities
+need to be better
+
+and are too decentralized.
+
+The government is determined
+to not only fix
+
+these consolidation issues
+but to branch
+
+into new and more invasive
+surveillance technologies.
+
+While cameras track
+you in public,
+
+much of your private life
+is on your phone.
+
+Your location,
+
+the apps you have,
+
+the things you say online,
+
+the government is using
+all of this information
+
+to monitor you
+without you even knowing.
+
+Police use phone trackers
+
+to help connect your digital life
+to your physical location.
+
+Our investigation found
+a dramatic expansion
+
+of their use across China.
+
+Sometimes, the trackers
+are invisible,
+
+hidden within cameras.
+
+Others look like
+Wi-Fi routers.
+
+Here’s how authorities put
+this technology to work.
+
+Your phone is
+constantly searching
+
+for the strongest available
+network signals.
+
+Some trackers,
+known as IMSI catchers,
+
+imitate strong
+cellular signals,
+
+luring your phone’s connection
+
+before capturing its unique
+identifying information.
+
+Other trackers,
+like Wi-Fi sniffers,
+
+lie in wait on public
+Wi-Fi networks,
+
+intercepting and analyzing
+your phone’s
+
+outbound communications.
+
+Since these trackers can be
+installed throughout a city,
+
+authorities can use them to
+map out a phone’s movements.
+
+Let’s say you post
+something online
+
+that the government
+finds incendiary.
+
+Police can go to
+social media companies
+
+and find out your username,
+
+phone number
+
+and your device ID.
+
+They can then look
+up that device ID
+
+to see what the trackers
+have captured.
+
+This way, police can find out
+where you’ve been
+
+and where they might
+be able to find you.
+
+These trackers can also exploit
+weak security practices
+
+and might be able to screen
+the apps you’ve installed.
+
+And those apps can say
+a lot about you.
+
+For example, police from
+a county in Guangdong
+
+bought phone trackers
+
+and hope they can use them
+to detect which phones
+
+have a Uyghur to Chinese
+dictionary app.
+
+Users of the app are likely part
+of the Uyghur ethnic minority,
+
+a group that is heavily
+surveilled and oppressed
+
+by the government.
+
+In 2019, a New York Times
+journalist walked around
+
+a city in Xinjiang
+where most Uyghurs live.
+
+There, he found
+38 Wi-Fi sniffers
+
+in just one neighborhood.
+
+We traced one of the earliest
+phone tracker purchases
+
+to Shandong Province in 2015.
+
+Seven years later,
+according to our analysis,
+
+all 31 of mainland China’s
+provinces and regions
+
+have them.
+
+Phone trackers are powerful
+tools on their own.
+
+But here’s what happens
+
+when you combine them
+with other data.
+
+These are internal product
+presentations we obtained from
+
+Megvii, one of China’s biggest
+surveillance contractors.
+
+Megvii’s technology compiles
+various types of personal data
+
+from mobile devices,
+cameras and other sources.
+
+Megvii told The Times its aim
+is to make communities safer
+
+and not, quote,
+
+“about monitoring any particular
+group or individual.”
+
+But this product is already
+being used by authorities
+
+and can display a person’s
+movements, clothing,
+
+vehicles, mobile device
+information
+
+and social connections.
+
+It shows us the
+type of dossier
+
+that authorities could
+generate for anyone.
+
+But we found that the pursuit
+of your personal data
+
+goes even further,
+
+to the biology of what
+makes you who you are.
+
+This is the next frontier
+of surveillance in China.
+
+The government is actively
+collecting voice prints,
+
+iris scans and DNA samples
+from its people
+
+and maintains that the
+primary use of this material
+
+is to track criminals.
+
+Chinese media often
+promote these efforts.
+
+But the documents
+repeatedly show
+
+that police are gathering
+troves of material
+
+from everyday citizens too.
+
+Like in the city
+of Zhongshan.
+
+Here, a document reveals
+that police are adding devices
+
+to record audio from at
+least a 300-foot radius
+
+around their street cameras.
+
+The document outlines
+their plans to use
+
+voice-recognition software
+to analyze the audio
+
+and add people’s voiceprints
+to a database.
+
+The police hope that combining
+voice-recognition systems
+
+with facial-recognition 
+cameras
+
+will help them identify
+targets faster.
+
+But since your voice,
+much like your appearance,
+
+alters over time,
+
+our investigation shows
+Chinese authorities
+
+are starting to collect
+personal identifiers that
+
+are less likely to change over
+time, such as iris patterns.
+
+One document reveals
+that, in Xinjiang,
+
+where millions
+of Uyghurs live,
+
+a government contractor built
+a database that can hold
+
+iris samples of up to
+30 million people,
+
+enough to cover Xinjiang’s
+entire population.
+
+We discovered this
+same contractor is now
+
+building large iris databases
+across the rest of the country.
+
+Documents show that
+the Chinese government
+
+is collecting another type
+of sensitive biometric data
+
+from broad segments
+of the population —
+
+DNA from men.
+
+Authorities can use
+genetic tracing
+
+to catalog entire
+generations of men.
+
+So a database built today
+will be useful
+
+far into the future.
+
+China says it uses
+these genetic databases
+
+to solve crimes.
+
+Criminal investigations
+around the world
+
+also rely on
+genetic information
+
+for this same reason.
+
+Y chromosome DNA is passed
+down from father to son.
+
+Given a genetic sample from
+an unknown male suspect,
+
+investigators can compare
+the men’s Y DNA to samples
+
+already present
+in their databases.
+
+A match indicates a relationship
+along paternal lines
+
+and helps pinpoint
+the suspect’s family history
+
+and geographic ancestry.
+
+Because of privacy concerns,
+many countries
+
+limit DNA collection to just
+criminals and suspects.
+
+But our analysis shows
+China stands out
+
+in its ambition to build ever
+larger databases of male DNA.
+
+We identified the earliest
+effort in Henan Province
+
+in 2014.
+
+Today, male DNA databases
+exist in at least
+
+25 out of mainland China’s
+31 provinces and regions.
+
+The logic behind this
+ever-expanding campaign
+
+is clear.
+
+A bidding document from
+Gansu Province points out that,
+
+as populations and
+family lineages grow,
+
+so, too, will the value
+of male DNA collection.
+
+In the same document,
+
+the police describe their
+objective this way:
+
+“Do not miss a single
+family in each village.
+
+Do not miss a single
+man in each family.”
+
+From faces to DNA profiles,
+iris scans to voiceprints,
+
+the Chinese government is
+consolidating vast quantities
+
+of unique personal data
+with one ultimate goal —
+
+to build a comprehensive
+profile for each citizen,
+
+accessible anytime,
+anywhere,
+
+up and down the ranks
+of the government.
+
+This sweeping
+surveillance effort
+
+lays the groundwork for
+even more advanced methods
+
+of control.
+
+The documents show that
+the state is even working
+
+towards predicting
+potential threats
+
+before they materialize.
+
+It is building a future
+in which mass surveillance
+
+supports authoritarian rule.
+
+And it’s unlikely
+to stay in China.
+
+“Hi, this is Muyi, one of
+the producers of this video.
+
+Our team spent over a year
+analyzing more than 100,000
+
+government bidding documents
+to reveal how China’s
+
+surveillance state is seeking
+sensitive personal data
+
+at an unprecedented scale.
+
+We also obtained
+internal presentations
+
+from a security contractor
+and reviewed police manuals
+
+and state propaganda.
+
+We’ll have more coverage
+of China’s
+
+invasive surveillance efforts,
+
+including how officials
+are trying
+
+to predict the future
+to stop threats
+
+before they even materialize.
+
+You can see our ongoing
+coverage at the link
+
+on the screen.”
+
