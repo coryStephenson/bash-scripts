@@ -13,7 +13,7 @@ update_package_list() {
 
 # Function to import VirtualBox's Repo GPG key
 import_oracle_key() {
-    : <<'IMPORT_GPG_KEY'
+    <<IMPORT_GPG_KEY
     First, we’ll import the GPG key from the VirtualBox repository 
     to ensure the authenticity of the software we install from it.
     IMPORT_GPG_KEY
@@ -28,7 +28,7 @@ import_oracle_key() {
 
 # Function to add VirtualBox repository
 add_virtualbox_repository() {
-    : <<'ADD_REPO'
+    <<ADD_REPO
     Next, we’ll add the official VirtualBox repository to our Ubuntu 22.04 system. 
     If a new version is released, the update package will be made available with the rest of your system’s regular updates.
     ADD_REPO
