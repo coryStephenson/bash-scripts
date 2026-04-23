@@ -35,13 +35,18 @@ add_virtualbox_repository() {
     
     echo "Adding Oracle's VirtualBox repository..."
     sleep 3
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] \
-    http://download.virtualbox.org/virtualbox/debian $(. /etc/os-release && echo "$VERSION_CODENAME") contrib" \
-    | sudo tee /etc/apt/sources.list.d/virtualbox.list
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] http://download.virtualbox.org/virtualbox/debian $(. /etc/os-release && echo "$VERSION_CODENAME") contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
     sleep 3
 }
 
-
+# Function to install VirtualBox
+install_virtualbox() {
+    echo "Installing VirtualBox 7.2..."
+    sleep 3
+    sudo apt install virtualbox-7.2
+    sleep 3
+    echo "\n\n\n"
+}
 
 # Main script execution
 main() {
@@ -49,6 +54,7 @@ main() {
     import_oracle_key
     add_virtualbox_repository
     update_package_list
+    install_virtualbox
     echo "VirtualBox and Extension Pack installation completed successfully!"
 }
 
