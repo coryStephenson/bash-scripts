@@ -47,6 +47,7 @@ add_virtualbox_repository() {
 main() {
     update_package_list
     import_oracle_key
+    add_virtualbox_repository
     update_package_list
     echo "VirtualBox and Extension Pack installation completed successfully!"
 }
