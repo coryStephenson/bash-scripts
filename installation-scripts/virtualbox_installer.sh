@@ -60,6 +60,9 @@ install_extension_pack() {
     # the just-installed VirtualBox, you can use a built-in vboxmanage command:
 
     VERSION_NUM = $(vboxmanage -v | cut -dr -f1)
+
+    # Downloads the Extension Pack
+    wget https://download.virtualbox.org/virtualbox/"$(VERSION_NUM)"/Oracle_VirtualBox_Extension_Pack-"$(VERSION_NUM)".vbox-extpack
     
     echo "Installing VirtualBox Extension Pack..."
     sleep 3
