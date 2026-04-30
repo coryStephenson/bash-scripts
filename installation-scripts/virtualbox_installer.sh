@@ -51,6 +51,16 @@ install_extension_pack() {
     
     # USB 2 and USB 3 support
     # VirtualBox Remote Desktop Protocol (VRDP)
+    # Host webcam passthrough
+    # Disk image encryption with AES
+    # Intel PXE boot ROM
+    # Support for NVMe SSDs
+    # The Extension Pack’s version is strongly recommended 
+    # to match the VirtualBox’s installed version. To verify the exact one of 
+    # the just-installed VirtualBox, you can use a built-in vboxmanage command:
+
+    VARIABLE = vboxmanage -v | cut -dr -f1
+    
     echo "Installing VirtualBox Extension Pack..."
     sleep 3
     
