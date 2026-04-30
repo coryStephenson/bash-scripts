@@ -59,7 +59,7 @@ install_extension_pack() {
     # to match the VirtualBox’s installed version. To verify the exact one of 
     # the just-installed VirtualBox, you can use a built-in vboxmanage command:
 
-    VARIABLE = vboxmanage -v | cut -dr -f1
+    VERSION_NUM = $(vboxmanage -v | cut -dr -f1)
     
     echo "Installing VirtualBox Extension Pack..."
     sleep 3
