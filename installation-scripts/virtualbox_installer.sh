@@ -13,10 +13,9 @@ update_package_list() {
 
 # Function to import VirtualBox's Repo GPG key
 import_oracle_key() {
-    <<IMPORT_GPG_KEY
-    First, we’ll import the GPG key from the VirtualBox repository 
-    to ensure the authenticity of the software we install from it.
-    IMPORT_GPG_KEY
+    
+    # First, we’ll import the GPG key from the VirtualBox repository 
+    # to ensure the authenticity of the software we install from it.
     
     echo "Importing VirtualBox's Repo GPG key..."
     sleep 3
@@ -28,10 +27,9 @@ import_oracle_key() {
 
 # Function to add VirtualBox repository
 add_virtualbox_repository() {
-    <<ADD_REPO
-    Next, we’ll add the official VirtualBox repository to our Ubuntu 22.04 system. 
-    If a new version is released, the update package will be made available with the rest of your system’s regular updates.
-    ADD_REPO
+    
+    # Next, we’ll add the official VirtualBox repository to our Ubuntu 22.04 system. 
+    # If a new version is released, the update package will be made available with the rest of your system’s regular updates.
     
     echo "Adding Oracle's VirtualBox repository..."
     sleep 3
@@ -47,6 +45,15 @@ install_virtualbox() {
     sleep 3
     echo "\n\n\n"
 }
+
+# Function to install VirtualBox Extension Pack
+install_extension_pack() {
+    
+    # USB 2 and USB 3 support
+    # VirtualBox Remote Desktop Protocol (VRDP)
+    echo "Installing VirtualBox Extension Pack..."
+    sleep 3
+    
 
 # Main script execution
 main() {
