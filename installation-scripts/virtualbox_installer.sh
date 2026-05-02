@@ -66,7 +66,18 @@ install_extension_pack() {
     
     echo "Installing VirtualBox Extension Pack..."
     sleep 3
+    sudo vboxmanage extpack install Oracle_VirtualBox_Extension_Pack-"$(VERSION_NUM)".vbox-extpack
+    sleep 3
+
+    # Verify the installed VirtualBox extension pack version
+    vboxmanage list extpacks
+    sleep 3
     
+    # Before using VirtualBox, add your user account to the "vboxusers" group
+    sudo usermod -aG vboxusers $USER
+
+}
+
 
 # Main script execution
 main() {
@@ -76,9 +87,12 @@ main() {
     update_package_list
     install_virtualbox
     echo "VirtualBox and Extension Pack installation completed successfully!"
+    sleep 1
+    echo "Perform a reboot now...and then run `users $USER` to ensure you are in the vboxusers group."
+    sleep 3
 }
 
 # Execute the main function
 main
 
-13.37 seconds
+
