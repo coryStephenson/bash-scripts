@@ -74,7 +74,9 @@ install_extension_pack() {
     sleep 3
     
     # Before using VirtualBox, add your user account to the "vboxusers" group
+    echo "Adding your user account to the vboxusers group..."
     sudo usermod -aG vboxusers $USER
+    sleep 3
 
 }
 
@@ -86,10 +88,14 @@ main() {
     add_virtualbox_repository
     update_package_list
     install_virtualbox
+    install_extension_pack
     echo "VirtualBox and Extension Pack installation completed successfully!"
     sleep 1
     echo "Perform a reboot now...and then run `users $USER` to ensure you are in the vboxusers group."
     sleep 3
+    echo "The script will now terminate..."
+    sleep 3
+    exit 0
 }
 
 # Execute the main function
