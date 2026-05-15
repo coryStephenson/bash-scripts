@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Source URL: https://linuxiac.com/how-to-install-virtualbox-on-ubuntu-24-04-lts/
+
 if (( EUID != 0)); then
     echo "Please run script as root"
     exit 1
