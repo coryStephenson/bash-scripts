@@ -85,6 +85,39 @@ install_extension_pack() {
 
 }
 
+# Function to uninstall VirtualBox
+uninstall_virtualbox() {
+
+    echo -e "\n\nWould you prefer to uninstall VirtualBox?\n"
+
+        select ans in "Yes" "No";
+		do
+            case $ans in
+                "Yes")
+                          # Uninstall VirtualBox
+                          echo -e "\n\n\n"
+                          apt purge VirtualBox-7.2
+                          echo -e "\n\n\n"
+                          
+                          # Remove unnecessary package dependencies
+                          apt autoremove
+                          sleep 3
+                          echo -e "\n\n\n"
+
+                          # Remove the VirtualBox repository itself from the list of available repositories
+                          rm /etc/apt/sources.list.d/virtualbox.list
+                          sleep 3
+                          echo -e "\n\n\n"
+                          ;;
+                "No")
+                          echo "The script will now terminate..."
+                          sleep 3
+                          exit 0
+                          ;;
+            esac
+        done
+        
+}
 
 # Main script execution
 main() {
@@ -100,6 +133,7 @@ main() {
     sleep 3
     echo "The script will now terminate..."
     sleep 3
+    uninstall_virtualbox
     exit 0
 }
 
