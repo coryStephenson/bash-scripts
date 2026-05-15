@@ -1,4 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+if (( EUID != 0)); then
+    echo "Please run script as root"
+    exit 1
+fi
 
 # Script to install Oracle's VirtualBox and its Extension Pack on a Debian-based Linux machine
 
