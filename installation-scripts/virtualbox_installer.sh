@@ -13,7 +13,7 @@ update_package_list() {
     sleep 3
     sudo apt update
     sleep 3
-    echo "\n\n\n"
+    echo -e "\n\n\n"
 }
 
 # Function to import VirtualBox's Repo GPG key
@@ -27,7 +27,7 @@ import_oracle_key() {
     wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg \
     --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg 
     sleep 3
-    echo "\n\n\n"
+    echo -e "\n\n\n"
 }
 
 # Function to add VirtualBox repository
@@ -48,7 +48,7 @@ install_virtualbox() {
     sleep 3
     sudo apt install virtualbox-7.2
     sleep 3
-    echo "\n\n\n"
+    echo -e "\n\n\n"
 }
 
 # Function to install VirtualBox Extension Pack
@@ -64,14 +64,14 @@ install_extension_pack() {
     # to match the VirtualBox’s installed version. To verify the exact one of 
     # the just-installed VirtualBox, you can use a built-in vboxmanage command:
 
-    VERSION_NUM = $(vboxmanage -v | cut -dr -f1)
+    
 
     # Downloads the Extension Pack
-    wget https://download.virtualbox.org/virtualbox/"$(VERSION_NUM)"/Oracle_VirtualBox_Extension_Pack-"$(VERSION_NUM)".vbox-extpack
+    wget https://download.virtualbox.org/virtualbox/$(vboxmanage -v | cut -dr -f1)/Oracle_VirtualBox_Extension_Pack-$(vboxmanage -v | cut -dr -f1).vbox-extpack
     
     echo "Installing VirtualBox Extension Pack..."
     sleep 3
-    sudo vboxmanage extpack install Oracle_VirtualBox_Extension_Pack-"$(VERSION_NUM)".vbox-extpack
+    sudo vboxmanage extpack install Oracle_VirtualBox_Extension_Pack-$(vboxmanage -v | cut -dr -f1).vbox-extpack
     sleep 3
 
     # Verify the installed VirtualBox extension pack version
