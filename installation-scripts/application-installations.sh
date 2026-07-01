@@ -151,6 +151,12 @@ apt install lld clang
 
 # Installing Pied (https://pied.mikeasoft.com/)
 # espeak-ng is a dependency
-sudo apt install espeak-ng
+sudo apt install flatpak
+sudo apt install gnome-software-plugin-flatpak
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+sudo systemctl reboot
+sudo apt install espeak-ng speech-dispatcher qml-module-qtmultimedia
+sudo apt install qt6-speech-speechd-plugin
+sudo systemctl enable speech-dispatcher.service
 wget https://github.com/Elleo/pied/releases/download/v0.3.1/com.mikeasoft.pied.flatpak
 flatpak install com.mikeasoft.pied.flatpak
