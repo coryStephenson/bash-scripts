@@ -5,6 +5,8 @@
 
 set -e  # Exit on error
 
+
+
 # Check if running as root
 if [[ $EUID -ne 0 ]]; then
    echo "Error: This script must be run as root" 
@@ -66,12 +68,11 @@ fi
 
 # Wait for kernel to update partition table
 sleep 2
-partprobe "$DEVICE"
+partprobe "$DEVICE"     # informs the OS of partition table changes
 sleep 1
 
 # Partition SSD
-# Parameters: mkpart <name> <fs-type> <start> <end>
-parted -s "$DEVICE" mklabel gpt
+# Parameters: mkpart <name> <part-type> <fs-type> <start> <end>
 parted -s "$DEVICE" mkpart primary ntfs 1MiB 100%
 parted -s "$DEVICE" align-check optimal 1
 
