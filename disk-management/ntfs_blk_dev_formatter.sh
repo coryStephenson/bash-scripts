@@ -49,31 +49,12 @@ umount ${DEVICE}* 2>/dev/null || true
     echo "Wiping existing signatures..."
     wipefs -a "$DEVICE"
 
-echo "1) Create GPT partition table"
-echo "2) Create MBR partition table"
-read -p "Choose an option (1 or 2): " choice
-
-
-if [[ $choice -eq 1 ]]; then
-    # Create GPT partition table
-    parted -s "$DEVICE" mklabel gpt
-
-elif [[ $choice -eq 2 ]]; then
-     # Create MBR partition table
-    parted -s "$DEVICE" mklabel msdos
-else
-    echo "Invalid choice."
-fi
-
-
 # Wait for kernel to update partition table
 sleep 2
 partprobe "$DEVICE"     # informs the OS of partition table changes
 sleep 1
 
-# Partition SSD
-# Parameters: mkpart <name> <part-type> <fs-type> <start> <end>
-parted -s "$DEVICE" mkpart primary ntfs 1MiB 100%
+# Check if partition satisfies the alignment constraint of type.  type must be "minimal" or "optimal".
 parted -s "$DEVICE" align-check optimal 1
 
 # Determine the partition device name
