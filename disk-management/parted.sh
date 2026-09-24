@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Check if running as root
+if [[ $EUID -ne 0 ]]; then
+   echo "Error: This script must be run as root" 
+   exit 1
+fi
+
 usage() {
     cat >&2 <<EOF
 Usage: $0 -d <device> -l <label-type> -f <fs-type> [-t <part-type>] [-n <name>]
