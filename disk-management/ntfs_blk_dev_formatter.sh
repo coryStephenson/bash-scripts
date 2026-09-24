@@ -5,8 +5,6 @@
 
 set -e  # Exit on error
 
-
-
 # Check if running as root
 if [[ $EUID -ne 0 ]]; then
    echo "Error: This script must be run as root" 
@@ -14,10 +12,9 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Check arguments
-if [ $# -lt 1 ]; then
-    echo "Usage: $0 <device> [filesystem-label]"
-    echo "Example: $0 /dev/sdb MyDisk"
-    exit 1
+if [[ $# -ne 0 ]]; then
+   echo "Error: This script must be run with no arguments"
+   exit 1
 fi
 
 DEVICE=$1
@@ -48,6 +45,9 @@ umount ${DEVICE}* 2>/dev/null || true
 # Wipe existing partition table and filesystem signatures
     echo "Wiping existing signatures..."
     wipefs -a "$DEVICE"
+
+# Call parted.sh (partitions disk)
+./parted.sh -d /dev/sdb -l gpt -f ntfs -n "storage"
 
 # Wait for kernel to update partition table
 sleep 2
