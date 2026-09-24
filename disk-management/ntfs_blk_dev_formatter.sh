@@ -17,8 +17,8 @@ if [[ $# -ne 0 ]]; then
    exit 1
 fi
 
-DEVICE=$1
-LABEL=${2:-""}
+DEVICE="/dev/sdb"
+LABEL="storage"
 
 # Validate device exists
 if [ ! -b "$DEVICE" ]; then
