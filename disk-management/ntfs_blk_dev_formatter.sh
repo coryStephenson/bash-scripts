@@ -75,9 +75,13 @@ IFS=: read -r NEW_PART_NUM NEW_PART_START NEW_PART_END NEW_PART_SIZE NEW_PART_FS
 NEW_PART_FLAGS="${NEW_PART_FLAGS%;}"
 
 echo "Done! Disk formatted successfully."
-echo "Partition: $PARTITION"
-echo "Filesystem: ntfs"
-[ -n "$LABEL" ] && echo "Label: $LABEL"
+echo "Partition: $NEW_PART_NUM"
+echo "Start: $NEW_PART_START"
+echo "End: $NEW_PART_END"
+echo "Size of partition: $NEW_PART_SIZE"
+echo "Filesystem: $NEW_PART_FS"
+[ -n "$NEW_PART_NAME" ] && echo "Name: $NEW_PART_NAME"
+echo "Flags: $NEW_PART_FLAGS"
 
 # Display partition information
 echo ""
