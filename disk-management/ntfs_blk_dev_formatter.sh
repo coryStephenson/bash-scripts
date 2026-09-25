@@ -74,26 +74,6 @@ IFS=: read -r NEW_PART_NUM NEW_PART_START NEW_PART_END NEW_PART_SIZE NEW_PART_FS
 # Strip the trailing semicolon from the flags field
 NEW_PART_FLAGS="${NEW_PART_FLAGS%;}"
 
-# Determine the partition device name
-if [[ "$DEVICE" =~ nvme|mmcblk ]]; then
-    PARTITION="${DEVICE}p1"
-else
-    PARTITION="${DEVICE}1"
-fi
-
-# Create ntfs filesystem
-echo "Creating ntfs filesystem on ${PARTITION}..."
-if [ -n "$LABEL" ]; then
-    mkfs.ntfs -f -L "$LABEL" "$PARTITION"
-else
-    mkfs.ntfs -f "$PARTITION"
-fi
-
-# Wait for kernel to update partition table
-sleep 2
-partprobe "$DEVICE"
-sleep 1
-
 echo "Done! Disk formatted successfully."
 echo "Partition: $PARTITION"
 echo "Filesystem: ntfs"
