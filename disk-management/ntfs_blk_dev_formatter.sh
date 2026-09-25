@@ -84,6 +84,6 @@ echo "Filesystem: $NEW_PART_FS"
 echo "Flags: $NEW_PART_FLAGS"
 
 # Display partition information
-echo ""
-echo "Partition table:"
-sfdisk -l "$DEVICE"
+# echo ""
+# echo "Partition table:"
+# sfdisk -l "$DEVICE"
