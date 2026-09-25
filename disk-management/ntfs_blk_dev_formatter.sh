@@ -20,25 +20,27 @@ fi
 DEVICE="/dev/sdb"
 LABEL="storage"
 
-# Validate device exists
-if [ ! -b "$DEVICE" ]; then
-    echo "Error: $DEVICE is not a valid block device"
-    exit 1
-fi
-
 # Invoke wiper function
 wiper
 
 # Call parted.sh (partitions disk)
 ./parted.sh -d /dev/sdb -l gpt -f ntfs -n "storage"
 
+# Validate device exists
+if [ ! -b "$DEVICE" ]; then
+    echo "Error: $DEVICE is not a valid block device"
+    exit 1
+fi
+
+# Check if partition satisfies the alignment constraint of type.  type must be "minimal" or "optimal".
+parted -s "$DEVICE" align-check optimal 1
+
 # Wait for kernel to update partition table
 sleep 2
 partprobe "$DEVICE"     # informs the OS of partition table changes
 sleep 1
 
-# Check if partition satisfies the alignment constraint of type.  type must be "minimal" or "optimal".
-parted -s "$DEVICE" align-check optimal 1
+
 
 # Determine the partition device name
 if [[ "$DEVICE" =~ nvme|mmcblk ]]; then
