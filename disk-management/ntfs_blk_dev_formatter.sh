@@ -18,13 +18,39 @@ if [[ $# -ne 0 ]]; then
 fi
 
 DEVICE="/dev/sdb"
-LABEL="storage"
+PART_TABLE="gpt"
+FS_TYPE="ntfs"
+NAME="storage"
+ALIGNMENT="optimal"
+
+wiper() {
+
+# Warning prompt
+echo "WARNING: This will DESTROY all data on $DEVICE"
+echo -n "Are you sure you want to continue? (yes/no): "
+read CONFIRM
+
+if [ "$CONFIRM" != "yes" ]; then
+    echo "Aborted."
+    exit 0
+fi
+
+echo "Starting disk formatting process..."
+
+# Unmount any mounted partitions on this device
+echo "Unmounting any mounted partitions..."
+umount ${DEVICE}* 2>/dev/null || true
+
+# Wipe existing partition table and filesystem signatures
+    echo "Wiping existing signatures..."
+    wipefs -a "$DEVICE"
+}
 
 # Invoke wiper function
 wiper
 
 # Call parted.sh (partitions disk)
-./parted.sh -d /dev/sdb -l gpt -f ntfs -n "storage"
+./parted.sh -d "$DEVICE" -l "$PART_TABLE" -f "$FS_TYPE" -n "$NAME"
 
 # Validate device exists
 if [ ! -b "$DEVICE" ]; then
@@ -33,7 +59,7 @@ if [ ! -b "$DEVICE" ]; then
 fi
 
 # Check if partition satisfies the alignment constraint of type.  type must be "minimal" or "optimal".
-parted -s "$DEVICE" align-check optimal 1
+parted -s "$DEVICE" align-check "$ALIGNMENT" 1
 
 # Wait for kernel to update partition table
 sleep 2
@@ -41,7 +67,13 @@ partprobe "$DEVICE"     # informs the OS of partition table changes
 sleep 1
 
 # Prints fields like: partition number:start:end:size:filesystem:name:flags;
-PART_INFO=$(parted -m -s "$DEVICE" print | awk)
+NEW_PART_NUM=$(parted -m -s "$DEVICE" print | awk)
+NEW_PART_START=$(parted -m -s "$DEVICE" print | awk)
+NEW_PART_END=$(parted -m -s "$DEVICE" print | awk)
+NEW_PART_SIZE=$(parted -m -s "$DEVICE" print | awk)
+NEW_PART_FS=$(parted -m -s "$DEVICE" print | awk)
+NEW_PART_NAME=$(parted -m -s "$DEVICE" print | awk)
+NEW_PART_FLAGS=$(parted -m -s "$DEVICE" print | awk)
 
 # Determine the partition device name
 if [[ "$DEVICE" =~ nvme|mmcblk ]]; then
