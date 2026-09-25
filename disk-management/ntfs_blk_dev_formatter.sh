@@ -41,7 +41,7 @@ partprobe "$DEVICE"     # informs the OS of partition table changes
 sleep 1
 
 # Prints fields like: partition number:start:end:size:filesystem:name:flags;
-$(parted -m -s "$DEVICE" print | awk)
+PART_INFO=$(parted -m -s "$DEVICE" print | awk)
 
 # Determine the partition device name
 if [[ "$DEVICE" =~ nvme|mmcblk ]]; then
