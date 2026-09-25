@@ -66,14 +66,13 @@ sleep 2
 partprobe "$DEVICE"     # informs the OS of partition table changes
 sleep 1
 
-# Prints fields like: partition number:start:end:size:filesystem:name:flags;
-NEW_PART_NUM=$(parted -m -s "$DEVICE" print | awk)
-NEW_PART_START=$(parted -m -s "$DEVICE" print | awk)
-NEW_PART_END=$(parted -m -s "$DEVICE" print | awk)
-NEW_PART_SIZE=$(parted -m -s "$DEVICE" print | awk)
-NEW_PART_FS=$(parted -m -s "$DEVICE" print | awk)
-NEW_PART_NAME=$(parted -m -s "$DEVICE" print | awk)
-NEW_PART_FLAGS=$(parted -m -s "$DEVICE" print | awk)
+# Lines 70-75 parse the output of the parted command on line 70 into separate variables
+PART_LINE=$(parted -m -s "$DEVICE" print | awk -F: '$1 ~ /^[0-9]+$/ {line=$0} END{print line}')
+
+IFS=: read -r NEW_PART_NUM NEW_PART_START NEW_PART_END NEW_PART_SIZE NEW_PART_FS NEW_PART_NAME NEW_PART_FLAGS <<< "$PART_LINE"
+
+# Strip the trailing semicolon from the flags field
+NEW_PART_FLAGS="${NEW_PART_FLAGS%;}"
 
 # Determine the partition device name
 if [[ "$DEVICE" =~ nvme|mmcblk ]]; then
