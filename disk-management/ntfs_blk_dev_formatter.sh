@@ -26,25 +26,8 @@ if [ ! -b "$DEVICE" ]; then
     exit 1
 fi
 
-# Warning prompt
-echo "WARNING: This will DESTROY all data on $DEVICE"
-echo -n "Are you sure you want to continue? (yes/no): "
-read CONFIRM
-
-if [ "$CONFIRM" != "yes" ]; then
-    echo "Aborted."
-    exit 0
-fi
-
-echo "Starting disk formatting process..."
-
-# Unmount any mounted partitions on this device
-echo "Unmounting any mounted partitions..."
-umount ${DEVICE}* 2>/dev/null || true
-
-# Wipe existing partition table and filesystem signatures
-    echo "Wiping existing signatures..."
-    wipefs -a "$DEVICE"
+# Invoke wiper function
+wiper
 
 # Call parted.sh (partitions disk)
 ./parted.sh -d /dev/sdb -l gpt -f ntfs -n "storage"
