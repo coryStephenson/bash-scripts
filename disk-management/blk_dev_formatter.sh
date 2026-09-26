@@ -3,7 +3,7 @@
 # Script to format a block device with GPT partition table and ntfs filesystem
 # Usage: ./format_disk.sh /dev/sdX [label]
 
-set -e  # Exit on error
+
 
 # Check if running as root
 if [[ $EUID -ne 0 ]]; then
