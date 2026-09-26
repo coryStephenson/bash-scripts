@@ -47,7 +47,7 @@ umount ${DEVICE}* 2>/dev/null || true
 }
 
 # Invoke wiper function
-wiper
+#wiper
 
 # Call parted.sh (partitions disk)
 ./parted.sh -d "$DEVICE" -l "$PART_TABLE" -f "$FS_TYPE" -n "$NAME"
