@@ -23,6 +23,23 @@ FS_TYPE="ntfs"
 NAME="storage"
 ALIGNMENT="optimal"
 
+# Display partition information
+echo ""
+echo "Partition table:"
+sfdisk -l "$DEVICE"
+
+if [ $? -ne 0 ]; then
+    exit 1
+else
+    # Remove partition
+    parted -s "$DEVICE" rm 1
+
+    # Call parted.sh (partitions disk)
+    ./parted.sh -d "$DEVICE" -l "$PART_TABLE" -f "$FS_TYPE" -n "$NAME"
+fi
+
+
+
 wiper() {
 
 # Warning prompt
@@ -48,12 +65,6 @@ umount ${DEVICE}* 2>/dev/null || true
 
 # Invoke wiper function (not sure what this function does yet after first test)
 #wiper
-
-# Remove partition
-parted -s "$DEVICE" rm 1
-
-# Call parted.sh (partitions disk)
-./parted.sh -d "$DEVICE" -l "$PART_TABLE" -f "$FS_TYPE" -n "$NAME"
 
 # Validate device exists
 if [ ! -b "$DEVICE" ]; then
@@ -85,8 +96,3 @@ echo "Size of partition: $NEW_PART_SIZE"
 echo "Filesystem: $NEW_PART_FS"
 [ -n "$NEW_PART_NAME" ] && echo "Name: $NEW_PART_NAME"
 echo "Flags: $NEW_PART_FLAGS"
-
-# Display partition information
-# echo ""
-# echo "Partition table:"
-# sfdisk -l "$DEVICE"
