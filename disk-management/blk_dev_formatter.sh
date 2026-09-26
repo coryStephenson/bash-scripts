@@ -29,7 +29,8 @@ echo "Partition table:"
 sfdisk -l "$DEVICE"
 
 if [ $? -ne 0 ]; then
-    exit 1
+    # Call parted.sh (partitions disk)
+    ./parted.sh -d "$DEVICE" -l "$PART_TABLE" -f "$FS_TYPE" -n "$NAME"
 else
     # Remove partition
     parted -s "$DEVICE" rm 1
