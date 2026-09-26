@@ -102,6 +102,14 @@ echo "Filesystem: $NEW_PART_FS"
 [ -n "$NEW_PART_NAME" ] && echo "Name: $NEW_PART_NAME"
 echo "Flags: $NEW_PART_FLAGS\n\n"
 
+# Source: https://wiki.archlinux.org/title/Parted
+# fs-type is an identifier chosen among those listed by entering help mkpart as the 
+# closest match to the file system that you will use. The mkpart command does not 
+# actually create the file system: the fs-type parameter will simply be used by 
+# parted to set partition type GUID for GPT partitions or partition type ID for MBR partitions. 
+
+# The actual filesystem itself must still be made
+
 # Concatenate DEVICE and NEW_PART_NUM into single variable using the append operator (+=)
 DEVICE+="$NEW_PART_NUM"
 
