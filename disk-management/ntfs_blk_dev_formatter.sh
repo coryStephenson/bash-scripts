@@ -46,7 +46,7 @@ umount ${DEVICE}* 2>/dev/null || true
     wipefs -a "$DEVICE"
 }
 
-# Invoke wiper function
+# Invoke wiper function (not sure what this function does yet after first test)
 #wiper
 
 # Call parted.sh (partitions disk)
@@ -74,7 +74,7 @@ IFS=: read -r NEW_PART_NUM NEW_PART_START NEW_PART_END NEW_PART_SIZE NEW_PART_FS
 # Strip the trailing semicolon from the flags field
 NEW_PART_FLAGS="${NEW_PART_FLAGS%;}"
 
-echo "Done! Disk formatted successfully."
+echo "\n\nDone! Disk formatted successfully.\n\n"
 echo "Partition: $NEW_PART_NUM"
 echo "Start: $NEW_PART_START"
 echo "End: $NEW_PART_END"
