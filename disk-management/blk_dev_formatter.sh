@@ -23,6 +23,10 @@ FS_TYPE="ntfs"
 NAME="storage"
 ALIGNMENT="optimal"
 
+# Unmount any mounted partitions on this device
+echo "Unmounting any mounted partitions..."
+umount ${DEVICE}* 2>/dev/null || true
+
 # Display partition information
 echo ""
 echo "Partition table:"
