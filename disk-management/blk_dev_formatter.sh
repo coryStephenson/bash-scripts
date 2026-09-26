@@ -100,4 +100,10 @@ echo "End: $NEW_PART_END"
 echo "Size of partition: $NEW_PART_SIZE"
 echo "Filesystem: $NEW_PART_FS"
 [ -n "$NEW_PART_NAME" ] && echo "Name: $NEW_PART_NAME"
-echo "Flags: $NEW_PART_FLAGS"
+echo "Flags: $NEW_PART_FLAGS\n\n"
+
+# Concatenate DEVICE and NEW_PART_NUM into single variable using the append operator (+=)
+DEVICE+="$NEW_PART_NUM"
+
+# Make filesystem
+mkfs."$FS_TYPE" -f -L "$NAME" "$DEVICE"
