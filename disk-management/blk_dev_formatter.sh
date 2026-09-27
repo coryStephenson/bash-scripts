@@ -19,7 +19,7 @@ fi
 
 DEVICE="/dev/sdb"
 PART_TABLE="gpt"
-FS_TYPE="ntfs"
+FS_TYPE="ext4"
 NAME="storage"
 ALIGNMENT="optimal"
 
@@ -114,4 +114,27 @@ echo "Flags: $NEW_PART_FLAGS\n\n"
 DEVICE+="$NEW_PART_NUM"
 
 # Make filesystem
+echo "There are a few different options when it comes to making the filesystem."
+echo -n "Is this device a thumb drive, or a more massive drive? "
+read DRIVE
+
+if [ "$DRIVE" != "massive" ]; then
+
+    if [ "$FS_TYPE" = "ntfs" ]; then
+        mkfs."$FS_TYPE" -f -L "$NAME" "$DEVICE"
+    else
+        mkfs."$FS_TYPE" -E nodiscard,lazy_itable_init=1,lazy_journal_init=1 "$DEVICE"
+        exit 0
+    fi
+
+else
+
+    if [ "$FS_TYPE" = "ntfs" ]; then
+        mkfs."$FS_TYPE" -f -L "$NAME" "$DEVICE"
+    else
+        mkfs."$FS_TYPE" -E nodiscard -T largefile4 -m 0 "$DEVICE"
+        exit 0
+
+fi
+
 mkfs."$FS_TYPE" -f -L "$NAME" "$DEVICE"
