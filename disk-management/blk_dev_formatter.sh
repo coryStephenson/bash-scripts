@@ -1,9 +1,22 @@
 #!/usr/bin/env bash
 
-# Script to format a block device with GPT partition table and ntfs filesystem
-# Usage: ./format_disk.sh /dev/sdX [label]
-
-
+echo -e "\n\n****************************************************************************************\n
+Name of Script: $0\n
+Author: Cory Stephenson\n
+Format block devices\n
+Tasks:\n
+1) Initialize variables with desired values\n
+2) Unmount any mounted partitions on the device\n
+3) Display partition information\n
+4) If partition exists, remove it, and then partition device afterwards. Otherwise, partition the device\n
+5) Wiper function, meant to remove existing partition table and filesystem signatures, remains unused.\n
+6) Validate that device exists as expected following the partitioning process\n
+7) Check if partition satisfies the alignment constraint of type (optimal).\n
+8) Wait for kernel to update partition table (invoking partprobe). Maybe update /etc/fstab.\n
+9) 3 LOCs parse the output of the parted command on ~line 103 into separate variables\n
+10) Display info about new partition\n
+11) Make the actual filesystem\n
+********************************************************************************************\n\n"
 
 # Check if running as root
 if [[ $EUID -ne 0 ]]; then
@@ -23,7 +36,7 @@ FS_TYPE="ext4"
 NAME="storage"
 ALIGNMENT="optimal"
 
-# Unmount any mounted partitions on this device
+# Unmount any mounted partitions on the device
 echo "Unmounting any mounted partitions..."
 umount ${DEVICE}* 2>/dev/null || true
 
@@ -85,7 +98,7 @@ sleep 2
 partprobe "$DEVICE"     # informs the OS of partition table changes
 sleep 1
 
-# Lines 70-75 parse the output of the parted command on line 70 into separate variables
+# The next 3 LOCs parse the output of the parted command on line 70 into separate variables
 PART_LINE=$(parted -m -s "$DEVICE" print | awk -F: '$1 ~ /^[0-9]+$/ {line=$0} END{print line}')
 
 IFS=: read -r NEW_PART_NUM NEW_PART_START NEW_PART_END NEW_PART_SIZE NEW_PART_FS NEW_PART_NAME NEW_PART_FLAGS <<< "$PART_LINE"
@@ -93,14 +106,14 @@ IFS=: read -r NEW_PART_NUM NEW_PART_START NEW_PART_END NEW_PART_SIZE NEW_PART_FS
 # Strip the trailing semicolon from the flags field
 NEW_PART_FLAGS="${NEW_PART_FLAGS%;}"
 
-echo "\n\nDone! Disk formatted successfully.\n\n"
+echo -e "\n\nDone! Disk formatted successfully.\n\n"
 echo "Partition: $NEW_PART_NUM"
 echo "Start: $NEW_PART_START"
 echo "End: $NEW_PART_END"
 echo "Size of partition: $NEW_PART_SIZE"
 echo "Filesystem: $NEW_PART_FS"
 [ -n "$NEW_PART_NAME" ] && echo "Name: $NEW_PART_NAME"
-echo "Flags: $NEW_PART_FLAGS\n\n"
+echo -e "Flags: $NEW_PART_FLAGS\n\n"
 
 # Source: https://wiki.archlinux.org/title/Parted
 # fs-type is an identifier chosen among those listed by entering help mkpart as the 
