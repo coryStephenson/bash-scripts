@@ -87,9 +87,19 @@ echo "Differential Backup completed!"
 
 # Function for mirror backup
 mirror_backup() {
-  echo "Performing Mirror Backup..."
-  # Add your logic for performing mirror backup here
-  echo "Mirror Backup completed!"
+  # Source directory to be backed up
+source_dir="/path/to/source"
+
+# Destination directory to store the backup
+backup_dir="/path/to/backup"
+
+# Perform mirror backup
+echo "Performing Mirror Backup..."
+
+# Use rsync to create an exact replica of the source directory in the backup directory
+rsync -avz --delete "$source_dir/" "$backup_dir/"
+
+echo "Mirror Backup completed!"
 }
 
 # Loop for user input
