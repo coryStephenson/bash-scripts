@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # the set command is used to set or unset certain flags or settings within the shell environment
 # set -o is used to specify option names
