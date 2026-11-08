@@ -169,8 +169,7 @@ maybe_wipe_device() {
     printf 'A secure wipe with /dev/urandom is recommended before writing the ISO.\n'
     confirm 'Continue with the secure wipe?' || quit_script
     unmount_device "$device"
-    run_as_root dd if=/dev/urandom of="$device" bs=4M status=progress conv=fsync
-    run_as_root sync
+    run_as_root wipefs -a "$device"
   fi
 }
 
