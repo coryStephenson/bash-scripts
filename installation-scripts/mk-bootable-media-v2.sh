@@ -25,16 +25,24 @@ run_as_root() {
 }
 
 cleanup_download() {
-  exit_code=$?
-  line_number="${2}"
-  if (( exit_code != 0 )) && [[ -n "${CURRENT_DOWNLOAD}" && -e "${CURRENT_DOWNLOAD}" ]]; then
-    printf '\nSIGINT: Exit code %s' "$exit_code" ' on line %s' "$line_number" '. Removing partial download: %s\n' "$CURRENT_DOWNLOAD"
-    rm -f -- "$CURRENT_DOWNLOAD"
+  local exit_code=${1:-$?}
+  local line_number=${2:-unknown}
+
+  trap - ERR INT TERM   # avoid re-entering the trap
+
+  if (( exit_code != 0 )); then
+    printf '\nError: exit code %s on line %s.\n' "$exit_code" "$line_number" >&2
+    if [[ -n "${CURRENT_DOWNLOAD}" && -e "${CURRENT_DOWNLOAD}" ]]; then
+      printf 'Removing partial download: %s\n' "$CURRENT_DOWNLOAD" >&2
+      rm -f -- "$CURRENT_DOWNLOAD"
+    fi
   fi
   exit "$exit_code"
 }
 
-trap 'cleanup_download '${exit_code}' '${LINENO}'' ERR INT TERM
+trap 'cleanup_download "$?" "$LINENO"' ERR
+trap 'cleanup_download 130 "$LINENO"' INT
+trap 'cleanup_download 143 "$LINENO"' TERM
 
 pause() {
   read -rp $'\nPress Enter to continue... ' _
