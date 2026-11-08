@@ -144,7 +144,7 @@ root_disk() {
 
 has_existing_data() {
   local device=$1
-  wipefs -n "$device" 2>/dev/null | grep -q . && return 0
+  run_as_root wipefs -n "$device" 2>/dev/null | grep -q . && return 0
   lsblk -nrpo NAME,TYPE,FSTYPE,MOUNTPOINT "$device" | awk '
     NR > 1 && ($2 == "part" || $3 != "" || $4 != "") { found = 1 }
     END { exit found ? 0 : 1 }
