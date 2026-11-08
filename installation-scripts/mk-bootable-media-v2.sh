@@ -140,6 +140,7 @@ root_disk() {
   [[ -n "$root_source" ]] || return 0
   parent=$(lsblk -ndo PKNAME "$root_source" 2>/dev/null || true)
   [[ -n "$parent" ]] && printf '/dev/%s\n' "$parent"
+  return 0
 }
 
 has_existing_data() {
