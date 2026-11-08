@@ -155,8 +155,11 @@ unmount_device() {
   local device=$1 entry mountpoint
   while read -r entry; do
     mountpoint=$(findmnt -nr -S "$entry" -o TARGET 2>/dev/null || true)
-    [[ -n "$mountpoint" ]] && run_as_root umount "$entry"
+    if [[ -n "$mountpoint" ]]; then
+      run_as_root umount "$entry"
+    fi
   done < <(lsblk -nrpo NAME "$device")
+  return 0
 }
 
 maybe_wipe_device() {
