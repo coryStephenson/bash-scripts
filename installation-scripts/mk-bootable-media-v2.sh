@@ -28,7 +28,7 @@ cleanup_download() {
   local exit_code=$?
   line_number="${2}"
   if (( exit_code != 0 )) && [[ -n "${CURRENT_DOWNLOAD}" && -e "${CURRENT_DOWNLOAD}" ]]; then
-    printf '\nSIGINT: Exit code ${exit_code} on line ${line_number}. Removing partial download: %s\n' "$CURRENT_DOWNLOAD"
+    printf '\nSIGINT: Exit code %s' "$exit_code" ' on line %s' "$line_number" '. Removing partial download: %s\n' "$CURRENT_DOWNLOAD"
     rm -f -- "$CURRENT_DOWNLOAD"
   fi
   exit "$exit_code"
