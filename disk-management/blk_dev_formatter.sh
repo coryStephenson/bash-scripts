@@ -18,6 +18,12 @@ Tasks:\n
 11) Make the actual filesystem\n
 ********************************************************************************************\n\n"
 
+: << 'FILESYSTEMS'
+Windows filesystems: ntfs, fat32, exfat, refs, fat16
+Linux filesystems: ext2, ext3, ext4, xfs, btrfs, zfs, f2fs
+macOS filesystems: apfs, hfs+, hfs, fat32, exfat, ufs
+FILESYSTEMS
+
 # Check if running as root
 if [[ $EUID -ne 0 ]]; then
    echo "Error: This script must be run as root" 
