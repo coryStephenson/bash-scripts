@@ -22,6 +22,8 @@ Tasks:\n
 Windows filesystems: ntfs, fat32, exfat, refs, fat16
 Linux filesystems: ext2, ext3, ext4, xfs, btrfs, zfs, f2fs
 macOS filesystems: apfs, hfs+, hfs, fat32, exfat, ufs
+To check currently installed mkfs helper:
+ls /sbin/mkfs.* /usr/sbin/mkfs.* 2> /dev/null
 FILESYSTEMS
 
 # Check if running as root
